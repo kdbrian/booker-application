@@ -14,4 +14,10 @@ public class ErrorResponse {
     private String message;
     private Throwable cause;
 
+
+    ErrorResponse(int statusCode, String message){
+        this.message =message;
+        this.statusCode=statusCode;
+    }
+
 }

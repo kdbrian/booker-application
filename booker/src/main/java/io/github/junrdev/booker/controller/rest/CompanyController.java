@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-@RequestMapping("/company")
 @RestController
+@RequestMapping("/company")
 public class CompanyController {
 
     private final CompanyService companyService;
@@ -37,7 +38,8 @@ public class CompanyController {
 
     @GetMapping("/{name}/")
     public ResponseEntity<Company> getCompanyByName(@PathVariable("name") String name){
-        return ResponseEntity.ok(companyService.getCompanyByName(name));
+        Optional<Company> _company = companyService.getCompanyByName(name);
+        return _company.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping

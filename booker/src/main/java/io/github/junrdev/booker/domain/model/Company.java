@@ -1,6 +1,7 @@
 package io.github.junrdev.booker.domain.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 
 @Document
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Company  {
@@ -20,6 +22,6 @@ public class Company  {
 
     private String location;
 
-    private String dateJoined;
+    private String dateJoined = LocalDate.now().toString();
 
 }

@@ -1,5 +1,6 @@
 package io.github.junrdev.booker.util.error;
 
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,12 +12,19 @@ public class GlobalErrorHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException ex){
-
         return new ResponseEntity<>(
                 new ErrorResponse(ex.getStatusCode().value(), ex.getMessage(), ex.getCause()),
                 ex.getStatusCode()
         );
+    }
 
+    @ExceptionHandler(AppError.class)
+    public ResponseEntity<ErrorResponse> handleAppError(AppError error){
+
+        return new ResponseEntity<>(
+                new ErrorResponse(error.getStatusCode(), error.getMessage()),
+                HttpStatusCode.valueOf(error.getStatusCode())
+        );
     }
 
 }
