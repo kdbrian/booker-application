@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/company")
+@RestController
 public class CompanyController {
 
     private final CompanyService companyService;
@@ -30,7 +31,7 @@ public class CompanyController {
 
 
     @GetMapping("/")
-    public ResponseEntity<List<Company>> getAllCOmpanies(){
+    public ResponseEntity<List<Company>> getAllCompanies(){
         return ResponseEntity.ok(companyService.getAllCompanies());
     }
 

@@ -11,6 +11,7 @@ import java.awt.image.RescaleOp;
 import java.util.List;
 
 @RequestMapping("/route")
+@RestController
 public class RouteController {
 
     private final RouteService routeService;
