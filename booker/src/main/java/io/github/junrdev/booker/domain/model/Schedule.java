@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
 import java.util.Set;
 
 @Document
@@ -24,4 +25,13 @@ public class Schedule {
 
     @DBRef
     private Set<Route> routes;
+
+    public void addRoute(Route route){
+        routes.add(route);
+    }
+
+
+    public void addRoutes(List<Route> newRoutes){
+        routes.addAll(newRoutes);
+    }
 }

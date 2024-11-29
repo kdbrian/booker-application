@@ -1,11 +1,14 @@
 package io.github.junrdev.booker.domain.dto;
 
 import io.github.junrdev.booker.domain.model.Company;
+import io.github.junrdev.booker.domain.model.Route;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+
+import java.util.Set;
 
 @Data
 @Builder
@@ -19,4 +22,7 @@ public class ScheduleDto {
 
     private Long endTime;
 
+    private Set<Route> routes;
+
 }
+
