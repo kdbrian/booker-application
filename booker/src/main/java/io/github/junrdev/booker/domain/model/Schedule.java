@@ -25,6 +25,7 @@ public class Schedule {
     @Id
     private String id;
 
+    @NotNull(message = "Object moved or missing.")
     @DBRef
     private Company company;
 

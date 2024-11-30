@@ -2,8 +2,10 @@ package io.github.junrdev.booker.repo.mongo.impl;
 
 import io.github.junrdev.booker.domain.dto.CompanyDTO;
 import io.github.junrdev.booker.domain.model.Company;
+import io.github.junrdev.booker.domain.model.Schedule;
 import io.github.junrdev.booker.domain.service.CompanyService;
 import io.github.junrdev.booker.repo.mongo.CompanyRepository;
+import io.github.junrdev.booker.repo.mongo.ScheduleRepository;
 import io.github.junrdev.booker.util.error.AppError;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +30,12 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     private final CompanyRepository companyRepository;
+    private final ScheduleRepository scheduleRepository;
 
     @Autowired
-    public CompanyServiceImpl(CompanyRepository companyRepository) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, ScheduleRepository scheduleRepository) {
         this.companyRepository = companyRepository;
+        this.scheduleRepository = scheduleRepository;
     }
 
     @Override
@@ -64,8 +68,14 @@ public class CompanyServiceImpl implements CompanyService {
         if (!ObjectId.isValid(companyID))
             throw new AppError("Invalid id parameter : " + companyID, HttpStatus.NOT_FOUND);
 
-        if (!companyRepository.existsById(companyID))
+        Optional<Company> _company = companyRepository.findById(companyID);
+        if (_company.isEmpty())
             throw new AppError("Missing company with id : " + companyID, HttpStatus.NOT_FOUND);
+
+        if (!_company.get().getSchedules().isEmpty()){
+            scheduleRepository.deleteAll(_company.get().getSchedules());
+//            scheduleRepository.deleteAllById(_company.get().getSchedules().stream().map(Schedule::getId).toList());
+        }
 
         companyRepository.deleteById(companyID);
     }

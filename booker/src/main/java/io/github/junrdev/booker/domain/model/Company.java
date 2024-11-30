@@ -6,14 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.time.DurationMin;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-@Document(
-
-)
+@Document
 @Data
 @Builder
 @AllArgsConstructor
@@ -29,4 +30,14 @@ public class Company  {
     @Builder.Default()
     private String dateJoined = LocalDate.now().toString();
 
+    @Builder.Default()
+    @DBRef
+    private Set<Schedule> schedules = new HashSet<>();
+
+
+    public void addSchedule(Schedule schedule){
+        if (schedules == null)
+            schedules = new HashSet<>();
+        schedules.add(schedule);
+    }
 }

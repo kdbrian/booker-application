@@ -64,9 +64,10 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (_company.isEmpty())
             throw new AppError(String.format("Missing company with id : %s", dto.getCompanyID()), HttpStatus.NOT_FOUND);
 
+        Company company = _company.get();
         @Valid
         Schedule schedule = Schedule.builder()
-                .company(_company.get())
+                .company(company)
                 .endTime(dto.getEndTime())
                 .startTime(dto.getStartTime())
                 .build();
@@ -77,9 +78,13 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         schedule.setRoutes(dto.getRoutes());
 
-        return scheduleRepository.save(
-                schedule
-        );
+        Schedule saved = scheduleRepository.save(schedule);
+
+
+        company.addSchedule(schedule);
+
+        companyRepository.save(company);
+        return saved;
     }
 
     @Override
