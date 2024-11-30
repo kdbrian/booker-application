@@ -2,12 +2,12 @@ package io.github.junrdev.booker.domain.service;
 
 import io.github.junrdev.booker.domain.dto.CompanyDTO;
 import io.github.junrdev.booker.domain.model.Company;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CompanyService {
+
+    Company getCompanyById(String id);
 
     List<Company> getAllCompanies();
 

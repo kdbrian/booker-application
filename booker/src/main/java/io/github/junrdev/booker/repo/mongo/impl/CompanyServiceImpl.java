@@ -5,14 +5,27 @@ import io.github.junrdev.booker.domain.model.Company;
 import io.github.junrdev.booker.domain.service.CompanyService;
 import io.github.junrdev.booker.repo.mongo.CompanyRepository;
 import io.github.junrdev.booker.util.error.AppError;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
+    @Override
+    public Company getCompanyById(String companyID) {
+        if (!ObjectId.isValid(companyID))
+            throw new AppError("Invalid id parameter : " + companyID, HttpStatus.NOT_FOUND);
+
+        Optional<Company> _company = companyRepository.findById(companyID);
+        if (!companyRepository.existsById(companyID) || _company.isEmpty())
+            throw new AppError("Missing company with id : " + companyID, HttpStatus.NOT_FOUND);
+
+        return _company.get();
+    }
 
     private final CompanyRepository companyRepository;
 
@@ -38,7 +51,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<Company> getCompanyByName(String name) {
-        return  companyRepository.findByName(name);
+        return companyRepository.findByName(name);
     }
 
     @Override
@@ -48,8 +61,11 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void deleteById(String companyID) {
+        if (!ObjectId.isValid(companyID))
+            throw new AppError("Invalid id parameter : " + companyID, HttpStatus.NOT_FOUND);
+
         if (!companyRepository.existsById(companyID))
-            throw new AppError("Missing company with id : "+companyID, HttpStatus.NOT_FOUND);
+            throw new AppError("Missing company with id : " + companyID, HttpStatus.NOT_FOUND);
 
         companyRepository.deleteById(companyID);
     }

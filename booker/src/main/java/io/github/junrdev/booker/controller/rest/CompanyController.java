@@ -55,6 +55,13 @@ public class CompanyController {
         return ResponseEntity.ok(companyService.getAllCompanies());
     }
 
+    @GetMapping("/{id}/")
+    public ResponseEntity<Company> getAllCompanies(
+            @PathVariable(value = "id") String companyID
+    ) {
+        return ResponseEntity.ok(companyService.getCompanyById(companyID));
+    }
+
     @GetMapping("/{name}/")
     public ResponseEntity<List<Company>> getCompanyByName(@PathVariable("name") String name) {
         List<Company> _companys = companyService.getCompanyByName(name);
