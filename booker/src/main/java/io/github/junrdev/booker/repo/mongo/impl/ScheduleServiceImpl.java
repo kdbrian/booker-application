@@ -8,6 +8,7 @@ import io.github.junrdev.booker.repo.mongo.CompanyRepository;
 import io.github.junrdev.booker.repo.mongo.ScheduleRepository;
 import io.github.junrdev.booker.util.error.AppError;
 import jakarta.validation.Valid;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Optional<Company> _company = companyRepository.findById(dto.getCompanyID());
 
+        if (!ObjectId.isValid(dto.getCompanyID()))
+            throw new AppError(String.format("invalid id : %s", dto.getCompanyID()), HttpStatus.NOT_FOUND);
+
         if (_company.isEmpty())
             throw new AppError(String.format("Missing company with id : %s", dto.getCompanyID()), HttpStatus.NOT_FOUND);
 
@@ -80,15 +84,28 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Schedule saved = scheduleRepository.save(schedule);
 
-
-        company.addSchedule(schedule);
-
+        //adding reference to company
+        company.addSchedule(schedule.getId());
         companyRepository.save(company);
+
         return saved;
     }
 
     @Override
     public void deleteSchedule(Schedule schedule) {
+
+        Company company = schedule.getCompany();
+        Optional<Company> _company = companyRepository.findById(company.getId());
+
+        if (!companyRepository.existsById(company.getId()) || _company.isEmpty())
+            throw new AppError("Company missing with id "+ company.getId(), HttpStatus.NOT_FOUND);
+
+        //updating reference
+        assert !company.getSchedules().isEmpty() && company.getSchedules().contains(schedule.getId());
+
+        company.getSchedules().remove(schedule);
+        companyRepository.save(company);
+
         scheduleRepository.delete(schedule);
     }
 

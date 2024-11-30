@@ -31,13 +31,12 @@ public class Company  {
     private String dateJoined = LocalDate.now().toString();
 
     @Builder.Default()
-    @DBRef
-    private Set<Schedule> schedules = new HashSet<>();
+    private Set<String> schedules = new HashSet<>();
 
 
-    public void addSchedule(Schedule schedule){
+    public void addSchedule(String scheduleID){
         if (schedules == null)
             schedules = new HashSet<>();
-        schedules.add(schedule);
+        schedules.add(scheduleID);
     }
 }
