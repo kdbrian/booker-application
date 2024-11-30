@@ -63,8 +63,23 @@ public class CompanyController {
 
     @GetMapping
     public ResponseEntity<List<Company>> getLocationCompanies(@RequestParam(value = "location") String location) {
-        LOGGER.debug("loc -> {}",location);
+        LOGGER.debug("loc -> {}", location);
         return ResponseEntity.ok(companyService.getCompanyByLocation(location));
+    }
+
+
+    @DeleteMapping("/delete/all")
+    public ResponseEntity<String> deleteAllCompanies() {
+        return ResponseEntity.ok(String.format("Deleted %d records", companyService.deleteAll()));
+    }
+
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<String> deleteAllCompanies(
+            @PathVariable(value = "id") String id
+    ) {
+        companyService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

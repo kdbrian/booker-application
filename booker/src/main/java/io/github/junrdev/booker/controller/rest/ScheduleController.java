@@ -106,6 +106,7 @@ public class ScheduleController {
     @DeleteMapping("/delete/all")
     public ResponseEntity<String> deleteAll(){
         int size = scheduleService.getSchedules().size();
+        scheduleService.deleteAll();
         return ResponseEntity.ok(String.format("Successfully deleted %d records.", size));
     }
 

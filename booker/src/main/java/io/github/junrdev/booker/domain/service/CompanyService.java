@@ -17,4 +17,8 @@ public interface CompanyService {
 
     List<Company> getCompanyByLocation(String name);
 
+    void deleteById(String companyID);
+
+    Long deleteAll();
+
 }
