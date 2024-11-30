@@ -5,8 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public interface RouteService {
+public interface    RouteService {
 
     List<Route> getRoutes();
 

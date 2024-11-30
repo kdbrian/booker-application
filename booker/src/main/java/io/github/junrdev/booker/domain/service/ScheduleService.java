@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface ScheduleService {
+
+    Schedule getScheduleById(String scheduleID);
+
 
     List<Schedule> getSchedules();
 
@@ -16,4 +18,8 @@ public interface ScheduleService {
     Schedule addSchedule(ScheduleDto dto);
 
     void deleteSchedule(Schedule schedule);
+
+    void deleteAll();
+
+    void deleteScheduleById(String scheduleID);
 }

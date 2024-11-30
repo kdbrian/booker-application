@@ -21,7 +21,6 @@ public class Vehicle {
     @DBRef
     private Route route;
 
-
     private Double price;
 
     private List<String> features;
