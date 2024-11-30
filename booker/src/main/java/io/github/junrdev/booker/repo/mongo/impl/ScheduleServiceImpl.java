@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -71,7 +72,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Company company = _company.get();
         @Valid
         Schedule schedule = Schedule.builder()
-                .company(company)
+                .company(company.getId())
                 .endTime(dto.getEndTime())
                 .startTime(dto.getStartTime())
                 .build();
@@ -93,17 +94,17 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void deleteSchedule(Schedule schedule) {
-
-        Company company = schedule.getCompany();
-        Optional<Company> _company = companyRepository.findById(company.getId());
-
-        if (!companyRepository.existsById(company.getId()) || _company.isEmpty())
-            throw new AppError("Company missing with id "+ company.getId(), HttpStatus.NOT_FOUND);
+        Optional<Company> _company = companyRepository.findById(schedule.getCompany());
+        if (_company.isEmpty())
+            throw new AppError("Company missing with id "+ schedule.getCompany(), HttpStatus.NOT_FOUND);
 
         //updating reference
-        assert !company.getSchedules().isEmpty() && company.getSchedules().contains(schedule.getId());
+        Company company = _company.get();
+        Set<String> schedules = company.getSchedules();
+        assert !schedules.isEmpty() && schedules.contains(schedule.getId());
 
-        company.getSchedules().remove(schedule);
+        schedules.remove(schedule);
+        company.setSchedules(schedules);
         companyRepository.save(company);
 
         scheduleRepository.delete(schedule);
@@ -112,6 +113,23 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional
     @Override
     public void deleteAll() {
+        scheduleRepository.findAll().forEach(sch ->{
+
+            LOGGER.debug("deleting {}", sch.getId());
+            Company company = companyRepository
+                    .findById(sch.getCompany())
+                    .orElseThrow(() -> new AppError("Company missing with id "+ sch.getCompany(), HttpStatus.NOT_FOUND));
+
+            Set<String> schedules = company.getSchedules();
+            LOGGER.debug("schedules b4 : {}", schedules.size());
+            schedules.removeIf(s -> sch.getCompany().equals(s));
+
+            LOGGER.debug("schedules after : {}", schedules.size());
+
+            company.setSchedules(schedules);
+
+            companyRepository.save(company);
+        });
         scheduleRepository.deleteAll();
     }
 

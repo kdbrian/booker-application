@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Comparator;
 import java.util.List;
@@ -26,8 +27,7 @@ public class Schedule {
     private String id;
 
     @NotNull(message = "Object moved or missing.")
-    @DBRef
-    private Company company;
+    private String company;
 
     private Long startTime;
 
@@ -40,7 +40,6 @@ public class Schedule {
     public void addRoute(Route route) {
         routes.add(route);
     }
-
 
     public void addRoutes(List<Route> newRoutes) {
         routes.addAll(newRoutes);

@@ -10,7 +10,6 @@ public interface ScheduleService {
 
     Schedule getScheduleById(String scheduleID);
 
-
     List<Schedule> getSchedules();
 
     List<Schedule> getCompanySchedules(String companyId);
