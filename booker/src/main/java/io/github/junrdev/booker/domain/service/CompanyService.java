@@ -13,7 +13,7 @@ public interface CompanyService {
 
     Company addCompany(CompanyDTO dto);
 
-    Optional<Company> getCompanyByName(String name);
+    List<Company> getCompanyByName(String name);
 
     List<Company> getCompanyByLocation(String name);
 

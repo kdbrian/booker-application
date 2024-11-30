@@ -12,7 +12,7 @@ public class ErrorResponse {
 
     private int statusCode;
     private String message;
-    private Throwable cause;
+    transient private Throwable cause;
 
 
     ErrorResponse(int statusCode, String message){
