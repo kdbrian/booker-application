@@ -9,6 +9,7 @@ import io.github.junrdev.booker.repo.mongo.ScheduleRepository;
 import io.github.junrdev.booker.util.error.AppError;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import java.util.Optional;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
+
+
     @Override
     public Company getCompanyById(String companyID) {
         if (!ObjectId.isValid(companyID))
@@ -54,8 +57,30 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<Company> getCompanyByName(String name) {
-        return companyRepository.findByName(name);
+    public Company getCompanyByName(String name) {
+        try {
+            Optional<Company> _company = companyRepository.findByName(name);
+            if (_company.isEmpty())
+                throw new AppError(String.format("Missing company %s", name), HttpStatus.NOT_FOUND);
+            return _company.get();
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new AppError(String.format("Multiple matches found visit [/?name=\"%s\"]", name), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Override
+    public List<Company> getCompanyByNameWildCard(String name) {
+        return companyRepository.findByNameContaining(name);
+    }
+
+    @Override
+    public List<Company> getCompanyByLocationNameWildCard(String name) {
+        return companyRepository.findByLocationContaining(name);
+    }
+
+    @Override
+    public List<Company> getCompanyByNameAndLocation(String name, String location) {
+        return companyRepository.findByNameAndLocationContaining(name, location);
     }
 
     @Override

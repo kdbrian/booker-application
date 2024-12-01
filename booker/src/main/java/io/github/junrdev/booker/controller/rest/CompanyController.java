@@ -38,7 +38,6 @@ public class CompanyController {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<CompanyDTO>> violations = validator.validate(dto);
-        LOGGER.debug("Empty : {} 😂 {} violations 🤯🤯.", violations.isEmpty(), violations.size());
 
         if (!violations.isEmpty()) {
             String validatorError = violations.stream().map(v -> "\n" + v.getMessage()).collect(Collectors.joining());
@@ -62,15 +61,33 @@ public class CompanyController {
         return ResponseEntity.ok(companyService.getCompanyById(companyID));
     }
 
-    @GetMapping("/{name}/")
-    public ResponseEntity<List<Company>> getCompanyByName(@PathVariable("name") String name) {
-        List<Company> _companys = companyService.getCompanyByName(name);
+    @GetMapping("/{name}")
+    public ResponseEntity<Company> getCompanyByName(@PathVariable("name") String name) {
+        Company _companys = companyService.getCompanyByName(name);
         return ResponseEntity.ok(_companys);
     }
 
     @GetMapping
-    public ResponseEntity<List<Company>> getLocationCompanies(@RequestParam(value = "location") String location) {
-        LOGGER.debug("loc -> {}", location);
+    public ResponseEntity<List<Company>> getLocationCompanies(
+            @RequestParam(value = "location", required = false) String location,
+            @RequestParam(value = "name", required = false) String name
+    ) {
+
+        if (location != null && name != null) {
+            LOGGER.debug("loc -> {}, name -> {}", location, name);
+            return ResponseEntity.ok(companyService.getCompanyByNameAndLocation(name, location));
+        }
+
+        if (location != null && !location.isBlank()) {
+            LOGGER.debug("loc -> {}", location);
+            return ResponseEntity.ok(companyService.getCompanyByLocationNameWildCard(location));
+        }
+
+        if (name != null && !name.isBlank()) {
+            LOGGER.debug("name -> {}", name);
+            return ResponseEntity.ok(companyService.getCompanyByNameWildCard(name));
+        }
+
         return ResponseEntity.ok(companyService.getCompanyByLocation(location));
     }
 

@@ -13,9 +13,15 @@ public interface CompanyService {
 
     Company addCompany(CompanyDTO dto);
 
-    List<Company> getCompanyByName(String name);
+    Company getCompanyByName(String name);
+
+    List<Company> getCompanyByNameWildCard(String name);
 
     List<Company> getCompanyByLocation(String name);
+
+    List<Company> getCompanyByLocationNameWildCard(String name);
+
+    List<Company> getCompanyByNameAndLocation(String name,String location);
 
     void deleteById(String companyID);
 
