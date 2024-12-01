@@ -56,6 +56,7 @@ public class VehicleServiceImpl implements VehicleService {
         LOGGER.debug("Price {}", dto.price());
         Vehicle vehicle = Vehicle.builder()
                 .identifier(dto.identifier())
+                .seatCount(dto.seatCount())
                 .price(dto.price())
                 .features(dto.features())
                 .route(route)

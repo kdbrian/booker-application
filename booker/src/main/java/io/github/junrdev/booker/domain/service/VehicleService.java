@@ -14,5 +14,9 @@ public interface VehicleService {
     Vehicle getVehicleByIdentifier(String identifier);
 
     List<Vehicle> getVehicles();
+
     Long deleteVehicles();
+
+    Long deleteVehicles();
+
 }

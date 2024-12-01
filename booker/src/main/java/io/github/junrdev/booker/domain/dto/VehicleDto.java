@@ -27,6 +27,17 @@ public record VehicleDto(
         @Max(value = 10000, message = "more than maximum 9999")
         Double price,
 
+
+        @NotNull(message = "A vehicle cant have no seats")
+        @Min(value = 7, message = "less than minimum 6")
+        @Max(value = 60, message = "more than maximum 59")
+        Long seatCount,
+
+
+        @Min(value = 0, message = "less than minimum 0")
+        @Min(value = 60, message = "more than maximum 59")
+        Long seatsOccupied,
+
         List<String> features
 ) {
 

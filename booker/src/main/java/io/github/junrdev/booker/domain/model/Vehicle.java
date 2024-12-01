@@ -29,6 +29,10 @@ public class Vehicle {
 
     private List<String> features;
 
+    private Long seatCount;
+
+    private Long seatsOccuppied;
+
     @Builder.Default
     private String createdAt = LocalDateTime.now().toString();
 }

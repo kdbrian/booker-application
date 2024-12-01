@@ -56,6 +56,13 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleMapper.toDto(vehicleService.addVehicle(dto)));
     }
 
+    @PutMapping("/{id}/occupy/")
+    public ResponseEntity<VehicleDto> occupyVehicleSeat(
+            @PathVariable String vehicleId
+    ) {
+        return ResponseEntity.ok(vehicleMapper.toDto(vehicleService.addVehicle(dto)));
+    }
+
     @DeleteMapping("/delete/all")
     public ResponseEntity<String> deleteVehicles() {
         return ResponseEntity.ok(String.format("Deleted %d records.", vehicleService.deleteVehicles()));
