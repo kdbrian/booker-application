@@ -20,13 +20,12 @@ public class Schedule {
     public static IDComparator IDComparator = new IDComparator();
     public static StartTimeComparator StartTimeComparator = new StartTimeComparator();
     public static EndTimeComparator EndTimeComparator = new EndTimeComparator();
-    public static RoutesCountComparator RoutesCountComparator = new RoutesCountComparator();
 
 
     @Id
     private String id;
 
-//    @NotNull(messa
+    //    @NotNull(messa
 //    ge = "Object moved or missing.")
     @DBRef
     private Company company;
@@ -34,18 +33,6 @@ public class Schedule {
     private Long startTime;
 
     private Long endTime;
-
-    @DBRef
-    @NotNull(message = "Routes cannot be null")
-    private Set<Route> routes;
-
-    public void addRoute(Route route) {
-        routes.add(route);
-    }
-
-    public void addRoutes(List<Route> newRoutes) {
-        routes.addAll(newRoutes);
-    }
 
 
     public static class IDComparator implements Comparator<Schedule> {
@@ -56,13 +43,6 @@ public class Schedule {
         }
     }
 
-    public static class RoutesCountComparator implements Comparator<Schedule> {
-
-        @Override
-        public int compare(Schedule o1, Schedule o2) {
-            return o1.routes.size() - o2.routes.size();
-        }
-    }
 
     public static class StartTimeComparator implements Comparator<Schedule> {
 
