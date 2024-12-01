@@ -3,6 +3,7 @@ package io.github.junrdev.booker;
 import io.github.junrdev.booker.domain.dto.ScheduleDto;
 import io.github.junrdev.booker.domain.model.Schedule;
 import io.github.junrdev.booker.util.mappers.ScheduleMapper;
+import io.github.junrdev.booker.util.mappers.VehicleMapper;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
@@ -23,6 +24,11 @@ public class BookerApplication {
 	@Bean
 	public ScheduleMapper scheduleMapper(){
 		return new ScheduleMapper();
+	}
+
+	@Bean
+	public VehicleMapper vehicleMapper(){
+		return new VehicleMapper();
 	}
 
 
