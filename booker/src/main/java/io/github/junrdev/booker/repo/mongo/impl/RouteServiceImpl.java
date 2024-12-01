@@ -7,6 +7,7 @@ import io.github.junrdev.booker.domain.service.RouteService;
 import io.github.junrdev.booker.repo.mongo.RouteRepository;
 import io.github.junrdev.booker.repo.mongo.ScheduleRepository;
 import io.github.junrdev.booker.util.error.AppError;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,13 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public Route addRoute(RouteDto dto) {
 
+        if (!ObjectId.isValid(dto.getScheduleID()))
+            throw new AppError("Invalid schedule id : %s", HttpStatus.BAD_REQUEST);
+
         var schedule = scheduleRepository.findById(dto.getScheduleID())
                 .orElseThrow(()-> new AppError("Missing route with id : %s", HttpStatus.NOT_FOUND));
 
+        LOGGER.debug("saving");
         return routeRepository.save(
                 Route.builder()
                         .schedule(schedule)

@@ -24,21 +24,21 @@ import java.util.stream.Collectors;
 public class CompanyController {
 
     private final CompanyService companyService;
+    private final Validator validator;
     private static final Logger LOGGER = LoggerFactory.getLogger(CompanyController.class);
 
     @Autowired
-    public CompanyController(CompanyService companyService) {
+    public CompanyController(CompanyService companyService, Validator validator) {
         this.companyService = companyService;
+        this.validator = validator;
     }
 
 
     @PostMapping("/new")
     public ResponseEntity<Company> addCompany(@Valid @RequestBody CompanyDTO dto) {
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<CompanyDTO>> violations = validator.validate(dto);
 
+        Set<ConstraintViolation<CompanyDTO>> violations = validator.validate(dto);
         if (!violations.isEmpty()) {
             String validatorError = violations.stream().map(v -> "\n" + v.getMessage()).collect(Collectors.joining());
             throw new AppError("Failed to validate request : Error \n" + validatorError, HttpStatus.BAD_REQUEST);

@@ -1,13 +1,11 @@
 package io.github.junrdev.booker.domain.dto;
 
-import io.github.junrdev.booker.domain.model.Schedule;
 import io.github.junrdev.booker.domain.model.Vehicle;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.Set;
 
@@ -19,10 +17,13 @@ public class RouteDto {
 
     private String id;
 
+    @NotBlank(message = "From cannot be null.")
     private String from;
 
+    @NotBlank(message = "From cannot be null.")
     private String to;
 
+    @NotBlank(message = "Missing schedule id.")
     private String scheduleID;
 
     private Set<Vehicle> vehicles;
