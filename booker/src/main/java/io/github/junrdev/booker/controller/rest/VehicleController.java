@@ -32,6 +32,7 @@ public class VehicleController {
     public ResponseEntity<List<VehicleDto>> getAllVehicles() {
 
         List<Vehicle> vehicles = vehicleService.getVehicles();
+
         LOGGER.debug("got {}, {}", vehicles.size(), vehicles);
         return ResponseEntity.ok(
                 vehicles
@@ -41,15 +42,21 @@ public class VehicleController {
         );
     }
 
+    @GetMapping(value = {"/{identifier}/","/{identifier}"})
+    public ResponseEntity<VehicleDto> addVehicleToRoute(
+            @PathVariable(name = "identifier") String identifier
+    ) {
+        return ResponseEntity.ok(vehicleMapper.toDto(vehicleService.getVehicleByIdentifier(identifier)));
+    }
+
     @PostMapping("/new")
     public ResponseEntity<VehicleDto> addVehicleToRoute(
             @Valid @RequestBody VehicleDto dto
     ) {
         return ResponseEntity.ok(vehicleMapper.toDto(vehicleService.addVehicle(dto)));
-
     }
 
-    @PostMapping("/delete/all")
+    @DeleteMapping("/delete/all")
     public ResponseEntity<String> deleteVehicles() {
         return ResponseEntity.ok(String.format("Deleted %d records.", vehicleService.deleteVehicles()));
 

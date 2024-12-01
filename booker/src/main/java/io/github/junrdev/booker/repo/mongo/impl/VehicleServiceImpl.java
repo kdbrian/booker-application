@@ -45,12 +45,17 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public Vehicle addVehicle(VehicleDto dto) {
 
+        if (vehicleRepository.findByIdentifier(dto.identifier()).isPresent())
+            throw new AppError(String.format("Found vehicle with identifier %s.", dto.identifier()), HttpStatus.BAD_REQUEST);
+
+
         Route route = routeRepository
                 .findById(dto.routeId())
-                .orElseThrow(()-> new AppError(String.format("Missing route with Id : %s", dto.routeId()), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppError(String.format("Missing route with Id : %s", dto.routeId()), HttpStatus.NOT_FOUND));
 
         LOGGER.debug("Price {}", dto.price());
         Vehicle vehicle = Vehicle.builder()
+                .identifier(dto.identifier())
                 .price(dto.price())
                 .features(dto.features())
                 .route(route)
@@ -58,6 +63,12 @@ public class VehicleServiceImpl implements VehicleService {
 
         LOGGER.debug("Price {}", dto.price());
         return vehicleRepository.save(vehicle);
+    }
+
+    @Override
+    public Vehicle getVehicleByIdentifier(String identifier) {
+        return vehicleRepository.findByIdentifier(identifier)
+                .orElseThrow(()-> new AppError("Missing vehicle "+identifier, HttpStatus.NOT_FOUND));
     }
 
     @Override

@@ -19,6 +19,9 @@ public record VehicleDto(
         @NotBlank(message = "Provide a route ID")
         String routeId,
 
+        @NotBlank(message = "We need a unique identifier. Like a plate Number.")
+        String identifier,
+
         @NotNull(message = "What is the price")
         @Min(value = 200, message = "less than minimum value 199")
         @Max(value = 10000, message = "more than maximum 9999")

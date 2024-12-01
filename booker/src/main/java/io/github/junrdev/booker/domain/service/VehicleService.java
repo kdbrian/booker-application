@@ -11,6 +11,8 @@ public interface VehicleService {
 
     Vehicle addVehicle(VehicleDto dto);
 
+    Vehicle getVehicleByIdentifier(String identifier);
+
     List<Vehicle> getVehicles();
     Long deleteVehicles();
 }
