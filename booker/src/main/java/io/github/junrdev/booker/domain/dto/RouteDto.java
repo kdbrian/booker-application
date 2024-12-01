@@ -26,6 +26,8 @@ public class RouteDto {
     @NotBlank(message = "Missing schedule id.")
     private String scheduleID;
 
+    private String createdAt;
+
     private Set<Vehicle> vehicles;
 
 

@@ -1,9 +1,7 @@
 package io.github.junrdev.booker.domain.service;
 
-import io.github.junrdev.booker.domain.dto.VehicleDTO;
-import io.github.junrdev.booker.domain.model.Route;
+import io.github.junrdev.booker.domain.dto.VehicleDto;
 import io.github.junrdev.booker.domain.model.Vehicle;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -11,6 +9,8 @@ public interface VehicleService {
 
     List<Vehicle> getRouteVehicles(String routeID);
 
-    Vehicle addVehicle(VehicleDTO dto);
+    Vehicle addVehicle(VehicleDto dto);
 
+    List<Vehicle> getVehicles();
+    Long deleteVehicles();
 }

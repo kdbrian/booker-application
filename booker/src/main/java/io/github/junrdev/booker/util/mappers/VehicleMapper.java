@@ -16,6 +16,7 @@ public class VehicleMapper extends EntityToDtoMapper<Vehicle, VehicleDto> {
     public VehicleDto toDto(Vehicle vehicle) {
         return VehicleDto.builder()
                 .id(vehicle.getId())
+                .price(vehicle.getPrice())
                 .routeId(vehicle.getRoute().getId())
                 .features(vehicle.getFeatures())
                 .build();

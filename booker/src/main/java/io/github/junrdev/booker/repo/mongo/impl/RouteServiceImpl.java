@@ -54,7 +54,6 @@ public class RouteServiceImpl implements RouteService {
                 .schedule(schedule)
                 .from(dto.getFrom())
                 .to(dto.getTo())
-                .vehicles(dto.getVehicles())
                 .build();
         LOGGER.debug("saving {}", route.toString());
         return routeRepository.save(

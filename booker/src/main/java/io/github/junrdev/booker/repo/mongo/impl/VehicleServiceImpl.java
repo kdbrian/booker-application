@@ -1,6 +1,6 @@
 package io.github.junrdev.booker.repo.mongo.impl;
 
-import io.github.junrdev.booker.domain.dto.VehicleDTO;
+import io.github.junrdev.booker.domain.dto.VehicleDto;
 import io.github.junrdev.booker.domain.model.Route;
 import io.github.junrdev.booker.domain.model.Vehicle;
 import io.github.junrdev.booker.domain.service.VehicleService;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
@@ -42,20 +43,32 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Vehicle addVehicle(VehicleDTO dto) {
+    public Vehicle addVehicle(VehicleDto dto) {
 
-        Optional<Route> _route = routeRepository.findById(dto.getRouteID());
+        Route route = routeRepository
+                .findById(dto.routeId())
+                .orElseThrow(()-> new AppError(String.format("Missing route with Id : %s", dto.routeId()), HttpStatus.NOT_FOUND));
 
-        if (_route.isEmpty())
-            throw new AppError(String.format("Missing route with Id : %s", dto.getRouteID()), HttpStatus.NOT_FOUND);
+        LOGGER.debug("Price {}", dto.price());
+        Vehicle vehicle = Vehicle.builder()
+                .price(dto.price())
+                .features(dto.features())
+                .route(route)
+                .build();
 
-        return vehicleRepository.save(
-                Vehicle.builder()
-                        .route(_route.get())
-                        .price(dto.getPrice())
-                        .features(dto.getFeatures())
-                        .build()
-        );
+        LOGGER.debug("Price {}", dto.price());
+        return vehicleRepository.save(vehicle);
     }
 
+    @Override
+    public List<Vehicle> getVehicles() {
+        return vehicleRepository.findAll();
+    }
+
+    @Override
+    public Long deleteVehicles() {
+        long count = vehicleRepository.count();
+        vehicleRepository.deleteAll();
+        return count;
+    }
 }
