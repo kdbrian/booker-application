@@ -1,5 +1,6 @@
 package io.github.junrdev.booker.controller.rest;
 
+import io.github.junrdev.booker.domain.dto.RouteDto;
 import io.github.junrdev.booker.domain.model.Route;
 import io.github.junrdev.booker.domain.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,13 @@ public class RouteController {
     @GetMapping("/")
     public ResponseEntity<List<Route>> getAllRoutes(){
         return ResponseEntity.ok(routeService.getRoutes());
+    }
+
+    @GetMapping("/new")
+    public ResponseEntity<Route> addRouteToSchedule(
+            @RequestBody RouteDto dto
+            ){
+        return ResponseEntity.ok(routeService.addRoute(dto));
     }
 
     @GetMapping("/route/schedule/{id}/")

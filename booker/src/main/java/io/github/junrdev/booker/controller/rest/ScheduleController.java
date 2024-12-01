@@ -45,8 +45,8 @@ public class ScheduleController {
             @RequestParam(name = "sort", required = false) String sortBy,
             @RequestParam(name = "sort-order", required = false) String sortOrder
     ) {
-        var sortByValues = new HashSet<String>(
-                List.of(new String[]{"id", "startTime", "endTime", "noOfRoutes"})
+        var sortByValues = new HashSet<>(
+                List.of(new String[]{"id", "startTime", "endTime"})
         );
 
         List<Schedule> schedules = scheduleService.getSchedules();
@@ -60,13 +60,11 @@ public class ScheduleController {
 
                 var modified = switch (sortValue) {
                     case "id" ->
-                            schedules.stream().sorted(Schedule.IDComparator).map(scheduleMapper::toScheduleDto).toList();
+                            schedules.stream().sorted(Schedule.IDComparator).map(scheduleMapper::toDto).toList();
                     case "startTime" ->
-                            schedules.stream().sorted(Schedule.StartTimeComparator).map(scheduleMapper::toScheduleDto).toList();
+                            schedules.stream().sorted(Schedule.StartTimeComparator).map(scheduleMapper::toDto).toList();
                     case "endTime" ->
-                            schedules.stream().sorted(Schedule.EndTimeComparator).map(scheduleMapper::toScheduleDto).toList();
-                    case "noOfRoutes" ->
-                            schedules.stream().sorted(Schedule.RoutesCountComparator).map(scheduleMapper::toScheduleDto).toList();
+                            schedules.stream().sorted(Schedule.EndTimeComparator).map(scheduleMapper::toDto).toList();
                     default -> throw new IllegalStateException("Unexpected value: " + sortValue);
                 };
                 ResponseEntity.ok(modified.stream().toList());
@@ -78,7 +76,7 @@ public class ScheduleController {
         if (sortOrder != null) {
             LOGGER.debug("sortOrder {}", sortOrder);
         }
-        return ResponseEntity.ok(schedules.stream().map(scheduleMapper::toScheduleDto).toList());
+        return ResponseEntity.ok(schedules.stream().map(scheduleMapper::toDto).toList());
     }
 
     @GetMapping("/company/{companyID}/")
@@ -88,14 +86,14 @@ public class ScheduleController {
         return ResponseEntity
                 .ok(scheduleService.getCompanySchedules(companyID)
                         .stream()
-                        .map(scheduleMapper::toScheduleDto).toList());
+                        .map(scheduleMapper::toDto).toList());
     }
 
     @GetMapping("/{scheduleID}/")
     public ResponseEntity<ScheduleDto> getScheduleById(
             @PathVariable(value = "scheduleID") String scheduleID
     ) {
-        return ResponseEntity.ok(scheduleMapper.toScheduleDto(scheduleService.getScheduleById(scheduleID)));
+        return ResponseEntity.ok(scheduleMapper.toDto(scheduleService.getScheduleById(scheduleID)));
     }
 
 
@@ -103,7 +101,7 @@ public class ScheduleController {
     public ResponseEntity<ScheduleDto> addSchedule(
             @Valid @RequestBody ScheduleDto dto
     ) {
-        return new ResponseEntity<>(scheduleMapper.toScheduleDto(scheduleService.addSchedule(dto)), HttpStatus.CREATED);
+        return new ResponseEntity<>(scheduleMapper.toDto(scheduleService.addSchedule(dto)), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}/delete/")

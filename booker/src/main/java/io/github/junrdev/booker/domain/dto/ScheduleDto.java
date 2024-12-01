@@ -29,7 +29,5 @@ public class ScheduleDto {
     @Builder.Default
     private Long endTime = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
 
-    private Set<Route> routes;
-
 }
 

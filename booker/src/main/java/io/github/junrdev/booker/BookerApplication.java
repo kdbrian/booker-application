@@ -19,7 +19,7 @@ public class BookerApplication {
 
 	@Bean
 	public ScheduleMapper scheduleMapper(){
-		return new ScheduleMapper(){};
+		return new ScheduleMapper();
 	}
 
 }

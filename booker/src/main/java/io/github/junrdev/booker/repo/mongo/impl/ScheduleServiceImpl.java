@@ -77,12 +77,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .startTime(dto.getStartTime())
                 .build();
 
-
-        if (dto.getRoutes() == null)
-            dto.setRoutes(new HashSet<>());
-
-        schedule.setRoutes(dto.getRoutes());
-
         Schedule saved = scheduleRepository.save(schedule);
 
         return saved;
