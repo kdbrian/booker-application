@@ -25,7 +25,6 @@ public class GlobalErrorHandler {
 
     @ExceptionHandler(AppError.class)
     public ResponseEntity<ErrorResponse> handleAppError(AppError error){
-
         return new ResponseEntity<>(
                 new ErrorResponse(error.getStatusCode(), error.getMessage()),
                 HttpStatusCode.valueOf(error.getStatusCode())

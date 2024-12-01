@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface    RouteService {
+public interface RouteService {
 
     Route addRoute(RouteDto dto);
 
@@ -14,6 +14,21 @@ public interface    RouteService {
 
     List<Route> getScheduleRoute(String scheduleID);
 
+    List<Route> getCompanyRoute(String companyID);
+
     void deleteRoute(Route route);
+
+    Long deleteRoutes();
+
+
+    List<Route> findByFrom(String from);
+
+    List<Route> findByFromContaining(String from);
+
+    List<Route> findByTo(String to);
+
+    List<Route> findByToContaining(String to);
+
+    List<Route> findByFromContainingAndToContaining(String from, String to);
 
 }

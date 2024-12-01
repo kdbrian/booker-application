@@ -34,8 +34,39 @@ public class RouteController {
     }
 
 
-    @GetMapping("/")
-    public ResponseEntity<List<Route>> getAllRoutes(){
+    @GetMapping(value = {"","/"})
+    public ResponseEntity<List<Route>> getAllRoutes(
+            @RequestParam(value = "schedule", required = false) String scheduleID,
+            @RequestParam(value = "company", required = false) String companyID,
+            @RequestParam(value = "from", required = false) String from,
+            @RequestParam(value = "to", required = false) String to
+    ) throws Exception {
+
+        if (scheduleID != null){
+            return ResponseEntity.ok(routeService.getScheduleRoute(scheduleID));
+        }
+
+        if (companyID != null){
+            return ResponseEntity.ok(routeService.getCompanyRoute(companyID));
+        }
+
+        if (from!=null && to != null){
+            LOGGER.debug("from {} to{}",from,to);
+            LOGGER.debug(from,to);
+            return ResponseEntity.ok(routeService.findByFromContainingAndToContaining(from, to));
+        }
+
+        if (from != null){
+            LOGGER.debug("from {}",from);
+            return ResponseEntity.ok(routeService.findByFromContaining(from));
+        }
+
+        if (to != null){
+            LOGGER.debug("to {}",to);
+            return ResponseEntity.ok(routeService.findByToContaining(to));
+        }
+
+
         return ResponseEntity.ok(routeService.getRoutes());
     }
 
@@ -43,14 +74,9 @@ public class RouteController {
     public ResponseEntity<Route> addRouteToSchedule(
             @Valid @RequestBody RouteDto dto
             ){
-        return new ResponseEntity<>(routeService.addRoute(dto), HttpStatus.CREATED);
-    }
-
-    @GetMapping("/route/schedule/{id}/")
-    public ResponseEntity<List<Route>> getScheduleRoutes(
-            @PathVariable(value = "id") String scheduleID
-    ){
-        return ResponseEntity.ok(routeService.getScheduleRoute(scheduleID));
+        Route route = routeService.addRoute(dto);
+        LOGGER.debug("route : {}", route.toString());
+        return new ResponseEntity<>(route, HttpStatus.CREATED);
     }
 
 
@@ -60,5 +86,11 @@ public class RouteController {
     ){
         routeService.deleteRoute(route);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/delete/all")
+    public ResponseEntity<String> deleteAllRoute(){
+        Long docs = routeService.deleteRoutes();
+        return new ResponseEntity<>("Deleted "+docs+" rows.", HttpStatus.OK);
     }
 }
