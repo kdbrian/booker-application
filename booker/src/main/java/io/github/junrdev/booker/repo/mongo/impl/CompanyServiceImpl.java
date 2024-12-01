@@ -72,10 +72,6 @@ public class CompanyServiceImpl implements CompanyService {
         if (_company.isEmpty())
             throw new AppError("Missing company with id : " + companyID, HttpStatus.NOT_FOUND);
 
-        if (!_company.get().getSchedules().isEmpty()){
-            scheduleRepository.deleteAllById(_company.get().getSchedules().stream().toList());
-        }
-
         companyRepository.deleteById(companyID);
     }
 

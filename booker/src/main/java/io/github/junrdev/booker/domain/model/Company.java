@@ -30,13 +30,4 @@ public class Company  {
     @Builder.Default()
     private String dateJoined = LocalDate.now().toString();
 
-    @Builder.Default()
-    private Set<String> schedules = new HashSet<>();
-
-
-    public void addSchedule(String scheduleID){
-        if (schedules == null)
-            schedules = new HashSet<>();
-        schedules.add(scheduleID);
-    }
 }

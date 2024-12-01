@@ -6,6 +6,7 @@ import io.github.junrdev.booker.domain.dto.ScheduleDto;
 import io.github.junrdev.booker.domain.model.Schedule;
 import io.github.junrdev.booker.domain.service.ScheduleService;
 import io.github.junrdev.booker.util.error.AppError;
+import io.github.junrdev.booker.util.mappers.ScheduleMapper;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,20 +28,23 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    protected enum SORT_ORDER{
+    private final ScheduleMapper scheduleMapper;
+
+    protected enum SORT_ORDER {
         ASC, DESC
     }
 
     @Autowired
-    public ScheduleController(ScheduleService scheduleService) {
+    public ScheduleController(ScheduleService scheduleService, ScheduleMapper scheduleMapper) {
         this.scheduleService = scheduleService;
+        this.scheduleMapper = scheduleMapper;
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Schedule>> getSchedules(
-            @RequestParam(name = "sort",required = false) String sortBy,
+    public ResponseEntity<List<ScheduleDto>> getSchedules(
+            @RequestParam(name = "sort", required = false) String sortBy,
             @RequestParam(name = "sort-order", required = false) String sortOrder
-    ){
+    ) {
         var sortByValues = new HashSet<String>(
                 List.of(new String[]{"id", "startTime", "endTime", "noOfRoutes"})
         );
@@ -48,63 +52,70 @@ public class ScheduleController {
         List<Schedule> schedules = scheduleService.getSchedules();
 
         if (sortBy != null) {
-            if (sortByValues.contains(sortBy)){
+            if (sortByValues.contains(sortBy)) {
 
                 String sortValue = sortByValues.stream().filter(sort -> Objects.equals(sort, sortBy))
                         .iterator()
                         .next();
 
-                var myVal = switch (sortValue){
-                    case "id" -> schedules.stream().sorted(Schedule.IDComparator).toList();
-                    case "startTime" -> schedules.stream().sorted(Schedule.StartTimeComparator).toList();
-                    case "endTime"-> schedules.stream().sorted(Schedule.EndTimeComparator).toList();
-                    case "noOfRoutes"-> schedules.stream().sorted(Schedule.RoutesCountComparator).toList();
-                    default-> throw new IllegalStateException("Unexpected value: " + sortValue);
+                var modified = switch (sortValue) {
+                    case "id" ->
+                            schedules.stream().sorted(Schedule.IDComparator).map(scheduleMapper::toScheduleDto).toList();
+                    case "startTime" ->
+                            schedules.stream().sorted(Schedule.StartTimeComparator).map(scheduleMapper::toScheduleDto).toList();
+                    case "endTime" ->
+                            schedules.stream().sorted(Schedule.EndTimeComparator).map(scheduleMapper::toScheduleDto).toList();
+                    case "noOfRoutes" ->
+                            schedules.stream().sorted(Schedule.RoutesCountComparator).map(scheduleMapper::toScheduleDto).toList();
+                    default -> throw new IllegalStateException("Unexpected value: " + sortValue);
                 };
-                return ResponseEntity.ok(myVal);
-            }else {
-                throw new AppError("Missing sort field available are "+ Arrays.toString(sortByValues.toArray()), HttpStatus.BAD_REQUEST);
+                ResponseEntity.ok(modified.stream().toList());
+            } else {
+                throw new AppError("Missing sort field available are " + Arrays.toString(sortByValues.toArray()), HttpStatus.BAD_REQUEST);
             }
 
         }
         if (sortOrder != null) {
             LOGGER.debug("sortOrder {}", sortOrder);
         }
-        return ResponseEntity.ok(schedules);
+        return ResponseEntity.ok(schedules.stream().map(scheduleMapper::toScheduleDto).toList());
     }
 
     @GetMapping("/company/{companyID}/")
-    public ResponseEntity<List<Schedule>> getCompanySchedules(
+    public ResponseEntity<List<ScheduleDto>> getCompanySchedules(
             @PathVariable(value = "companyID") String companyID
-    ){
-        return ResponseEntity.ok(scheduleService.getCompanySchedules(companyID));
+    ) {
+        return ResponseEntity
+                .ok(scheduleService.getCompanySchedules(companyID)
+                        .stream()
+                        .map(scheduleMapper::toScheduleDto).toList());
     }
 
     @GetMapping("/{scheduleID}/")
-    public ResponseEntity<Schedule> getScheduleById(
+    public ResponseEntity<ScheduleDto> getScheduleById(
             @PathVariable(value = "scheduleID") String scheduleID
-    ){
-        return ResponseEntity.ok(scheduleService.getScheduleById(scheduleID));
+    ) {
+        return ResponseEntity.ok(scheduleMapper.toScheduleDto(scheduleService.getScheduleById(scheduleID)));
     }
 
 
     @PostMapping("/new")
-    public ResponseEntity<Schedule> addSchedule(
+    public ResponseEntity<ScheduleDto> addSchedule(
             @Valid @RequestBody ScheduleDto dto
-            ){
-        return new ResponseEntity<>(scheduleService.addSchedule(dto), HttpStatus.CREATED);
+    ) {
+        return new ResponseEntity<>(scheduleMapper.toScheduleDto(scheduleService.addSchedule(dto)), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}/delete/")
     public ResponseEntity<Void> deleteSchedule(
             @PathVariable(value = "id") String scheduleID
-    ){
+    ) {
         scheduleService.deleteScheduleById(scheduleID);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/delete/all")
-    public ResponseEntity<String> deleteAll(){
+    public ResponseEntity<String> deleteAll() {
         int size = scheduleService.getSchedules().size();
         scheduleService.deleteAll();
         return ResponseEntity.ok(String.format("Successfully deleted %d records.", size));

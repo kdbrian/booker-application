@@ -18,6 +18,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class ScheduleDto {
 
+    private String id;
+
     @NotBlank(message = "Company Id is required.")
     private String companyID;
 

@@ -72,7 +72,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Company company = _company.get();
         @Valid
         Schedule schedule = Schedule.builder()
-                .company(company.getId())
+                .company(company)
                 .endTime(dto.getEndTime())
                 .startTime(dto.getStartTime())
                 .build();
@@ -85,51 +85,20 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Schedule saved = scheduleRepository.save(schedule);
 
-        //adding reference to company
-        company.addSchedule(schedule.getId());
-        companyRepository.save(company);
-
         return saved;
     }
 
     @Override
     public void deleteSchedule(Schedule schedule) {
-        Optional<Company> _company = companyRepository.findById(schedule.getCompany());
+        Optional<Company> _company = companyRepository.findById(schedule.getCompany().getId());
         if (_company.isEmpty())
             throw new AppError("Company missing with id "+ schedule.getCompany(), HttpStatus.NOT_FOUND);
-
-        //updating reference
-        Company company = _company.get();
-        Set<String> schedules = company.getSchedules();
-        assert !schedules.isEmpty() && schedules.contains(schedule.getId());
-
-        schedules.remove(schedule);
-        company.setSchedules(schedules);
-        companyRepository.save(company);
-
         scheduleRepository.delete(schedule);
     }
 
     @Transactional
     @Override
     public void deleteAll() {
-        scheduleRepository.findAll().forEach(sch ->{
-
-            LOGGER.debug("deleting {}", sch.getId());
-            Company company = companyRepository
-                    .findById(sch.getCompany())
-                    .orElseThrow(() -> new AppError("Company missing with id "+ sch.getCompany(), HttpStatus.NOT_FOUND));
-
-            Set<String> schedules = company.getSchedules();
-            LOGGER.debug("schedules b4 : {}", schedules.size());
-            schedules.removeIf(s -> sch.getCompany().equals(s));
-
-            LOGGER.debug("schedules after : {}", schedules.size());
-
-            company.setSchedules(schedules);
-
-            companyRepository.save(company);
-        });
         scheduleRepository.deleteAll();
     }
 
