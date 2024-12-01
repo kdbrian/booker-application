@@ -10,6 +10,6 @@ import org.springframework.stereotype.Service;
 * */
 public abstract class EntityToDtoMapper<T, K>{
 
-    abstract T fromDto(K k);
-    abstract K toDto(T t);
+    public abstract T fromDto(K k);
+    public abstract K toDto(T t);
 }
