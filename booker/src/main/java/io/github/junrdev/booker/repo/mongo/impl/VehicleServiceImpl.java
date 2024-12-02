@@ -2,7 +2,6 @@ package io.github.junrdev.booker.repo.mongo.impl;
 
 import io.github.junrdev.booker.domain.dto.BookingDto;
 import io.github.junrdev.booker.domain.dto.VehicleDto;
-import io.github.junrdev.booker.domain.enumarations.PAYMENT_STATUS;
 import io.github.junrdev.booker.domain.model.Booking;
 import io.github.junrdev.booker.domain.model.Route;
 import io.github.junrdev.booker.domain.model.Vehicle;
@@ -44,12 +43,10 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public List<Vehicle> getRouteVehicles(String routeID) {
 
-        Optional<Route> _route = routeRepository.findById(routeID);
+        Route route = routeRepository.findById(routeID)
+                .orElseThrow(() -> new AppError(String.format("Missing route with Id : %s", routeID), HttpStatus.NOT_FOUND));
 
-        if (_route.isEmpty())
-            throw new AppError(String.format("Missing route with Id : %s", routeID), HttpStatus.NOT_FOUND);
-
-        return vehicleRepository.findByRoute(_route.get());
+        return vehicleRepository.findByRoute(route);
     }
 
     @Override
@@ -80,6 +77,21 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public List<Vehicle> getVehicles() {
         return vehicleRepository.findAll();
+    }
+
+    @Override
+    public List<Vehicle> getVehiclesByPrice(double price) {
+        return vehicleRepository.findByPrice(price);
+    }
+
+    @Override
+    public List<Vehicle> getVehiclesBySeatCount(int count) {
+        return vehicleRepository.findBySeatCount(count);
+    }
+
+    @Override
+    public List<Vehicle> getVehiclesSeatsInRange(int[] range) {
+        return vehicleRepository.getVehiclesBySeatRange(range[0], range[1]);
     }
 
     @Override

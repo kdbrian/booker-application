@@ -17,6 +17,12 @@ public interface VehicleService {
 
     List<Vehicle> getVehicles();
 
+    List<Vehicle> getVehiclesByPrice(double price);
+
+    List<Vehicle> getVehiclesBySeatCount(int count);
+
+    List<Vehicle> getVehiclesSeatsInRange(int[] range);
+
     Long deleteVehicles();
 
     Booking occupy(BookingDto dto);
