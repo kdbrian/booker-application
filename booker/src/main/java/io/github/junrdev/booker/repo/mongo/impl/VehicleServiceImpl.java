@@ -95,21 +95,17 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
                 .orElseThrow(() -> new AppError("Missing vehicle " + dto.getVehicleId(), HttpStatus.NOT_FOUND));
 
-        if (
-                Objects.equals(vehicle.getSeatsOccuppied(), vehicle.getSeatCount())
-        )
+        if (Objects.equals(vehicle.getSeatsOccuppied(), vehicle.getSeatCount()))
             throw new AppError("Error booking Vehicle : " + vehicle.getIdentifier() + " full.", HttpStatus.BAD_REQUEST);
 
         Booking build = bookingMapper.fromDto(dto);
         build.setVehicle(vehicle);
 
-        Booking booking = bookingRepository.save(
-                build
-        );
+        Booking booking = bookingRepository
+                .save(build);
 
         vehicle.setSeatsOccuppied(vehicle.getSeatsOccuppied() + 1);
         vehicleRepository.save(vehicle);
-//        return String.format("Occupied seat %s, tracking %s", saved.getId(), booking.userID());
         return booking;
     }
 

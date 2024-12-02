@@ -7,6 +7,7 @@ public class VehicleMapper extends EntityToDtoMapper<Vehicle, VehicleDto> {
     @Override
     public Vehicle fromDto(VehicleDto vehicleDto) {
         return Vehicle.builder()
+                .seatsOccuppied(vehicleDto.seatsOccupied()!=null?vehicleDto.seatsOccupied():0L)
                 .seatCount(vehicleDto.seatCount())
                 .identifier(vehicleDto.identifier())
                 .price(vehicleDto.price())
