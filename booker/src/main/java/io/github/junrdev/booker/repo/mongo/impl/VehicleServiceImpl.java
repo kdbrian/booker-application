@@ -41,12 +41,27 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<Vehicle> getRouteVehicles(String routeID) {
+    public List<Vehicle> getRouteVehiclesByRouteId(String routeID) {
 
         Route route = routeRepository.findById(routeID)
                 .orElseThrow(() -> new AppError(String.format("Missing route with Id : %s", routeID), HttpStatus.NOT_FOUND));
 
         return vehicleRepository.findByRoute(route);
+    }
+
+    @Override
+    public List<Vehicle> getRouteVehiclesByRouteFrom(String from) {
+        return vehicleRepository.findAll().stream().filter(v -> v.getRoute().getFrom().equalsIgnoreCase(from)).toList();
+    }
+
+    @Override
+    public List<Vehicle> getRouteVehiclesByRouteTo(String to) {
+        return List.of();
+    }
+
+    @Override
+    public List<Vehicle> getRouteVehiclesByRouteFromAndTo(String from, String to) {
+        return List.of();
     }
 
     @Override

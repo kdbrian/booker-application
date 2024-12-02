@@ -36,7 +36,8 @@ public class VehicleController {
 
     @GetMapping(value = {"", "/"})
     public ResponseEntity<List<VehicleDto>> getAllVehicles(
-            @RequestParam(value = "route", required = false) String route,
+            @RequestParam(value = "routeId", required = false) String routeId,
+            @RequestParam(value = "routeFrom", required = false) String routeFrom,
             @RequestParam(value = "seats", required = false) Integer seatcount,
             @RequestParam(value = "price", required = false) Double price,
 
@@ -47,8 +48,8 @@ public class VehicleController {
 
         List<Vehicle> vehicles = vehicleService.getVehicles();
 
-        if (route != null)
-            vehicles = vehicleService.getRouteVehicles(route);
+        if (routeId != null)
+            vehicles = vehicleService.getRouteVehiclesByRouteId(routeId);
 
         if (seatcount != null) {
             vehicles = vehicleService.getVehiclesBySeatCount(seatcount);
@@ -90,6 +91,12 @@ public class VehicleController {
             vehicles = vehicleService.getVehiclesByPrice(price);
             return ResponseEntity.ok(vehicles.stream().map(vehicleMapper::toDto).toList());
         }
+
+        if (routeFrom != null) {
+            vehicles = vehicleService.getRouteVehiclesByRouteFrom(routeFrom);
+            return ResponseEntity.ok(vehicles.stream().map(vehicleMapper::toDto).toList());
+        }
+
 
         return ResponseEntity.ok(vehicles.stream().map(vehicleMapper::toDto).toList());
     }

@@ -9,7 +9,11 @@ import java.util.List;
 
 public interface VehicleService {
 
-    List<Vehicle> getRouteVehicles(String routeID);
+    List<Vehicle> getRouteVehiclesByRouteId(String routeID);
+    List<Vehicle> getRouteVehiclesByRouteFrom(String from);
+
+    List<Vehicle> getRouteVehiclesByRouteTo(String to);
+    List<Vehicle> getRouteVehiclesByRouteFromAndTo(String from, String to);
 
     Vehicle addVehicle(VehicleDto dto);
 

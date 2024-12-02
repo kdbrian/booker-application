@@ -44,7 +44,7 @@ public class RouteController {
     ) {
 
         if (id != null){
-            LOGGER.debug("to {}",to);
+            LOGGER.debug("id {}",id);
             return ResponseEntity.ok(List.of(routeService.getRouteById(id)));
         }
 

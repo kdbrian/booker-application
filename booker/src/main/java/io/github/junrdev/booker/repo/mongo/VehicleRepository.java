@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface VehicleRepository extends MongoRepository<Vehicle, String> {
+
     List<Vehicle> findByRoute(Route route);
 
 //    TODO: insert mongo query for loading using $gte and $lte and do same for price
