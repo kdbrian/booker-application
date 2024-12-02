@@ -104,8 +104,8 @@ public class VehicleServiceImpl implements VehicleService {
                 Booking.builder()
                         .paymentStatus(
                                 dto.getPaymentStatus() != null ?
-                                        dto.getPaymentStatus().name() :
-                                        PAYMENT_STATUS.PENDING.name()
+                                        dto.getPaymentStatus() :
+                                        PAYMENT_STATUS.PENDING
                         )
                         .vehicle(vehicle)
                         .userID(dto.getUserId() != null ? dto.getUserId() : UUID.randomUUID().toString())

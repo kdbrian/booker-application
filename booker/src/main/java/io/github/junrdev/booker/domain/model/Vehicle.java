@@ -33,6 +33,10 @@ public class Vehicle {
 
     private Long seatsOccuppied;
 
+    private Long leavingTime;
+
+    private Long estimatedTimeOfTravel;
+
     @Builder.Default
     private String createdAt = LocalDateTime.now().toString();
 }

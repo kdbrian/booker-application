@@ -11,6 +11,8 @@ public class VehicleMapper extends EntityToDtoMapper<Vehicle, VehicleDto> {
                 .identifier(vehicleDto.identifier())
                 .price(vehicleDto.price())
                 .features(vehicleDto.features())
+                .leavingTime(vehicleDto.leavingTime())
+                .estimatedTimeOfTravel(vehicleDto.estimatedTimeOfTravel())
                 .build();
     }
 
@@ -18,6 +20,8 @@ public class VehicleMapper extends EntityToDtoMapper<Vehicle, VehicleDto> {
     public VehicleDto toDto(Vehicle vehicle) {
         return VehicleDto.builder()
                 .id(vehicle.getId())
+                .leavingTime(vehicle.getLeavingTime())
+                .estimatedTimeOfTravel(vehicle.getEstimatedTimeOfTravel())
                 .seatCount(vehicle.getSeatCount())
                 .seatsOccupied(vehicle.getSeatsOccuppied())
                 .identifier(vehicle.getIdentifier())

@@ -38,6 +38,10 @@ public record VehicleDto(
         @Min(value = 60, message = "more than maximum 59")
         Long seatsOccupied,
 
+        Long leavingTime,
+
+        Long estimatedTimeOfTravel,
+
         List<String> features
 ) {
 
