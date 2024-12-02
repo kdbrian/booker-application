@@ -26,14 +26,12 @@ public class BookingController {
 
     private final BookingService bookingService;
     private final BookingMapper bookingMapper;
-    private final VehicleRepository vehicleRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
 
     @Autowired
     public BookingController(BookingService bookingService, BookingMapper bookingMapper, VehicleRepository vehicleRepository) {
         this.bookingService = bookingService;
         this.bookingMapper = bookingMapper;
-        this.vehicleRepository = vehicleRepository;
     }
 
 
@@ -135,6 +133,13 @@ public class BookingController {
             throw new AppError("Missing Body for update request", HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.ok(bookingMapper.toDto(bookingService.updateBooking(id, bookingDto)));
+    }
+
+    @GetMapping("/{id}/")
+    public ResponseEntity<BookingDto> fetchBookingWithId(
+            @PathVariable("id") String id
+    ) {
+        return ResponseEntity.ok(bookingMapper.toDto(bookingService.getBookingWithId(id)));
     }
 
     @DeleteMapping("/delete/all")

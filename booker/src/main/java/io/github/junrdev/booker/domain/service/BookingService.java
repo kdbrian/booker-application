@@ -5,12 +5,16 @@ import io.github.junrdev.booker.domain.enumarations.BOOKING_STATUS;
 import io.github.junrdev.booker.domain.enumarations.PAYMENT_STATUS;
 import io.github.junrdev.booker.domain.model.Booking;
 import io.github.junrdev.booker.domain.model.Vehicle;
+import io.github.junrdev.booker.util.error.AppError;
+import org.bson.types.ObjectId;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
 public interface BookingService {
 
     List<Booking> getBookings();
+    Booking getBookingWithId(String bookingId);
 
     List<Booking> getBookingsByPaymentStatus(PAYMENT_STATUS paymentStatus);
 
@@ -34,6 +38,14 @@ public interface BookingService {
 
     void deleteBooking(String bookingID);
 
+    default void checkId(String bookingID) {
+        if (!ObjectId.isValid(bookingID))
+            throw new AppError("Invalid id : " + bookingID, HttpStatus.BAD_REQUEST);
+
+    }
+
     Long deleteBookings();
+
+
 
 }

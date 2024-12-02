@@ -9,6 +9,7 @@ import io.github.junrdev.booker.domain.service.BookingService;
 import io.github.junrdev.booker.repo.mongo.BookingRepository;
 import io.github.junrdev.booker.repo.mongo.VehicleRepository;
 import io.github.junrdev.booker.util.error.AppError;
+import io.github.junrdev.booker.util.mappers.BookingMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,16 +23,25 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final VehicleRepository vehicleRepository;
+    private final BookingMapper bookingMapper;
 
     @Autowired
-    public BookingServiceImpl(BookingRepository bookingRepository, VehicleRepository vehicleRepository) {
+    public BookingServiceImpl(BookingRepository bookingRepository, VehicleRepository vehicleRepository, BookingMapper bookingMapper) {
         this.bookingRepository = bookingRepository;
         this.vehicleRepository = vehicleRepository;
+        this.bookingMapper = bookingMapper;
     }
 
     @Override
     public List<Booking> getBookings() {
         return bookingRepository.findAll();
+    }
+
+    @Override
+    public Booking getBookingWithId(String bookingId) {
+        checkId(bookingId);
+        return bookingRepository.findById(bookingId)
+                .orElseThrow((() -> new AppError("Missing booking id : " + bookingId, HttpStatus.NOT_FOUND)));
     }
 
     @Override
@@ -41,10 +51,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getBookingsByUserPaymentStatusAndBookingStatusAndVehicle(String user, PAYMENT_STATUS paymentStatus, BOOKING_STATUS bookingStatus, String vehicleID) {
-        if (!ObjectId.isValid(vehicleID))
-            throw new AppError("Invalid Vehicle id : " + vehicleID, HttpStatus.BAD_REQUEST);
-
-
+        checkId(vehicleID);
         Vehicle vehicle = vehicleRepository.findById(vehicleID)
                 .orElseThrow(() -> new AppError("Missing Booking id : " + vehicleID, HttpStatus.BAD_REQUEST));
 
@@ -53,11 +60,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getBookingsByUserId(String userID) {
-
 //        TODO: add check later after impl of user repo
-//        if (!ObjectId.isValid(userID))
-//            throw new AppError("Invalid user id : "+userID, HttpStatus.BAD_REQUEST);
-
         return bookingRepository.findByUserID(userID);
     }
 
@@ -78,9 +81,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getBookingsByVehicles(String vehicleID) {
-        if (!ObjectId.isValid(vehicleID))
-            throw new AppError("Invalid vehicle id : " + vehicleID, HttpStatus.BAD_REQUEST);
-
+        checkId(vehicleID);
         Vehicle vehicle = vehicleRepository.findById(vehicleID)
                 .orElseThrow(() -> new AppError("Missing vehicle id : " + vehicleID, HttpStatus.BAD_REQUEST));
         return bookingRepository.findByVehicle(vehicle);
@@ -89,8 +90,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking updateBooking(String bookingID, BookingDto dto) {
 
-        if (!ObjectId.isValid(bookingID))
-            throw new AppError("Invalid Booking id : " + bookingID, HttpStatus.BAD_REQUEST);
+        checkId(bookingID);
 
         if (dto.getId() != null && !bookingID.equals(dto.getId()))
             throw new AppError("Invalid booking id : " + bookingID, HttpStatus.BAD_REQUEST);
@@ -116,28 +116,18 @@ public class BookingServiceImpl implements BookingService {
         if (dto.getVehicleId() == null)
             throw new AppError("Missing vehicle id : ", HttpStatus.BAD_REQUEST);
 
-        if (!ObjectId.isValid(dto.getVehicleId()))
-            throw new AppError("Invalid vehicle id : " + dto.getVehicleId(), HttpStatus.BAD_REQUEST);
-
+        checkId(dto.getVehicleId());
         Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
                 .orElseThrow(() -> new AppError("Missing vehicle id : " + dto.getVehicleId(), HttpStatus.BAD_REQUEST));
 
-        Booking booking = Booking.builder()
-                .createdAt(dto.getCreatedAt() != null ? dto.getCreatedAt() : LocalDateTime.now().toString())
-                .paymentStatus(dto.getPaymentStatus())
-                .vehicle(vehicle)
-                .userID(dto.getUserId())
-                .build();
-
+        Booking booking = bookingMapper.fromDto(dto);
+        booking.setVehicle(vehicle);
         return bookingRepository.save(booking);
     }
 
     @Override
     public Booking cancelBooking(String bookingID) {
-
-        if (!ObjectId.isValid(bookingID))
-            throw new AppError("Invalid booking id : " + bookingID, HttpStatus.BAD_REQUEST);
-
+        checkId(bookingID);
         Booking booking = bookingRepository.findById(bookingID)
                 .orElseThrow(() -> new AppError("Missing booking id : " + bookingID, HttpStatus.BAD_REQUEST));
 
@@ -159,9 +149,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public void deleteBooking(String bookingID) {
-        if (!ObjectId.isValid(bookingID))
-            throw new AppError("Invalid Booking id : " + bookingID, HttpStatus.BAD_REQUEST);
-
+        checkId(bookingID);
         bookingRepository.deleteById(bookingID);
     }
 

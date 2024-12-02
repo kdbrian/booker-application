@@ -24,13 +24,12 @@ public class BookingMapper extends EntityToDtoMapper<Booking, BookingDto> {
 
     @Override
     public BookingDto toDto(Booking booking) {
-
         return BookingDto.builder()
                 .id(booking.getId())
                 .userId(booking.getUserID())
                 .createdAt(booking.getCreatedAt())
-                .paymentStatus(booking.getPaymentStatus())
                 .vehicleId(booking.getVehicle().getId())
+                .paymentStatus(booking.getPaymentStatus())
                 .bookingStatus(booking.getBookingStatus())
                 .build();
     }
