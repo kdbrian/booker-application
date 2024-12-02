@@ -1,5 +1,6 @@
 package io.github.junrdev.booker.domain.dto;
 
+import io.github.junrdev.booker.domain.enumarations.BOOKING_STATUS;
 import io.github.junrdev.booker.domain.enumarations.PAYMENT_STATUS;
 import io.github.junrdev.booker.domain.model.Booking;
 import io.github.junrdev.booker.util.mappers.EntityToDtoMapper;
@@ -26,6 +27,12 @@ public class BookingDto {
 
     @Builder.Default
     private PAYMENT_STATUS paymentStatus = PAYMENT_STATUS.PENDING;
+
+    @Builder.Default
+    private BOOKING_STATUS bookingStatus = BOOKING_STATUS.PENDING;
+
+    String createdAt;
+
 }
 
 

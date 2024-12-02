@@ -12,7 +12,9 @@ public class BookingMapper extends EntityToDtoMapper<Booking, BookingDto> {
     public Booking fromDto(BookingDto bookingDto) {
         return Booking.builder()
                 .userID(bookingDto.getUserId())
-                .paymentStatus(bookingDto.getPaymentStatus().name())
+                .paymentStatus(bookingDto.getPaymentStatus())
+                .createdAt(bookingDto.getCreatedAt())
+                .bookingStatus(bookingDto.getBookingStatus())
                 .build();
     }
 
@@ -20,10 +22,12 @@ public class BookingMapper extends EntityToDtoMapper<Booking, BookingDto> {
     public BookingDto toDto(Booking booking) {
 
         return BookingDto.builder()
-                .id(booking.id())
-                .userId(booking.userID())
-                .paymentStatus(PAYMENT_STATUS.valueOf(booking.paymentStatus()))
-                .vehicleId(booking.vehicle().getId())
+                .id(booking.getId())
+                .userId(booking.getUserID())
+                .createdAt(booking.getCreatedAt())
+                .paymentStatus(booking.getPaymentStatus())
+                .vehicleId(booking.getVehicle().getId())
+                .bookingStatus(booking.getBookingStatus())
                 .build();
     }
 }
