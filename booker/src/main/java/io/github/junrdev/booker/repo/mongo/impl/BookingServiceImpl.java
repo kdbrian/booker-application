@@ -50,7 +50,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getBookingsByVehicles(Vehicle vehicle) {
+    public List<Booking> getBookingsByVehicles(String vehicleID) {
+        if (!ObjectId.isValid(vehicleID))
+            throw new AppError("Invalid vehicle id : " + vehicleID, HttpStatus.BAD_REQUEST);
+
+        Vehicle vehicle = vehicleRepository.findById(vehicleID)
+                .orElseThrow(() -> new AppError("Missing vehicle id : " +vehicleID, HttpStatus.BAD_REQUEST));
         return bookingRepository.findByVehicle(vehicle);
     }
 
@@ -96,5 +101,12 @@ public class BookingServiceImpl implements BookingService {
             throw new AppError("Invalid Booking id : " + bookingID, HttpStatus.BAD_REQUEST);
 
         bookingRepository.deleteById(bookingID);
+    }
+
+    @Override
+    public Long deleteBookings() {
+        long count = bookingRepository.count();
+        bookingRepository.deleteAll();
+        return count;
     }
 }

@@ -31,6 +31,11 @@ public class BookerApplication {
 		return new VehicleMapper();
 	}
 
+//	@Bean
+//	public VehicleMapper vehicleMapper(){
+//		return new VehicleMapper();
+//	}
+
 
 	@Bean
 	public Validator validator(){

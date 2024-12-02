@@ -12,8 +12,8 @@ public class BookingMapper extends EntityToDtoMapper<Booking, BookingDto> {
     public Booking fromDto(BookingDto bookingDto) {
         return Booking.builder()
                 .userID(bookingDto.getUserId())
-                .paymentStatus(bookingDto.getPaymentStatus())
                 .createdAt(bookingDto.getCreatedAt())
+                .paymentStatus(bookingDto.getPaymentStatus())
                 .bookingStatus(bookingDto.getBookingStatus())
                 .build();
     }

@@ -11,6 +11,8 @@ import io.github.junrdev.booker.repo.mongo.BookingRepository;
 import io.github.junrdev.booker.repo.mongo.RouteRepository;
 import io.github.junrdev.booker.repo.mongo.VehicleRepository;
 import io.github.junrdev.booker.util.error.AppError;
+import io.github.junrdev.booker.util.mappers.BookingMapper;
+import io.github.junrdev.booker.util.mappers.VehicleMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +29,16 @@ public class VehicleServiceImpl implements VehicleService {
     private final VehicleRepository vehicleRepository;
     private final RouteRepository routeRepository;
     private final BookingRepository bookingRepository;
+    private final BookingMapper bookingMapper;
+    private final VehicleMapper vehicleMapper;
 
     @Autowired
-    public VehicleServiceImpl(VehicleRepository vehicleRepository, RouteRepository routeRepository, BookingRepository bookingRepository) {
+    public VehicleServiceImpl(VehicleRepository vehicleRepository, RouteRepository routeRepository, BookingRepository bookingRepository, BookingMapper bookingMapper, VehicleMapper vehicleMapper) {
         this.vehicleRepository = vehicleRepository;
         this.routeRepository = routeRepository;
         this.bookingRepository = bookingRepository;
+        this.bookingMapper = bookingMapper;
+        this.vehicleMapper = vehicleMapper;
     }
 
     @Override
@@ -58,14 +64,8 @@ public class VehicleServiceImpl implements VehicleService {
                 .orElseThrow(() -> new AppError(String.format("Missing route with Id : %s", dto.routeId()), HttpStatus.NOT_FOUND));
 
         LOGGER.debug("Price {}", dto.price());
-        Vehicle vehicle = Vehicle.builder()
-                .identifier(dto.identifier())
-                .seatCount(dto.seatCount())
-                .seatsOccuppied(0L)
-                .price(dto.price())
-                .features(dto.features())
-                .route(route)
-                .build();
+        Vehicle vehicle = vehicleMapper.fromDto(dto);
+        vehicle.setRoute(route);
 
         LOGGER.debug("Price {}", dto.price());
         return vehicleRepository.save(vehicle);
@@ -100,16 +100,11 @@ public class VehicleServiceImpl implements VehicleService {
         )
             throw new AppError("Error booking Vehicle : " + vehicle.getIdentifier() + " full.", HttpStatus.BAD_REQUEST);
 
+        Booking build = bookingMapper.fromDto(dto);
+        build.setVehicle(vehicle);
+
         Booking booking = bookingRepository.save(
-                Booking.builder()
-                        .paymentStatus(
-                                dto.getPaymentStatus() != null ?
-                                        dto.getPaymentStatus() :
-                                        PAYMENT_STATUS.PENDING
-                        )
-                        .vehicle(vehicle)
-                        .userID(dto.getUserId() != null ? dto.getUserId() : UUID.randomUUID().toString())
-                        .build()
+                build
         );
 
         vehicle.setSeatsOccuppied(vehicle.getSeatsOccuppied() + 1);
@@ -117,4 +112,5 @@ public class VehicleServiceImpl implements VehicleService {
 //        return String.format("Occupied seat %s, tracking %s", saved.getId(), booking.userID());
         return booking;
     }
+
 }
