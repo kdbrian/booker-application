@@ -1,6 +1,8 @@
 package io.github.junrdev.booker.domain.service;
 
+import io.github.junrdev.booker.domain.dto.BookingDto;
 import io.github.junrdev.booker.domain.dto.VehicleDto;
+import io.github.junrdev.booker.domain.model.Booking;
 import io.github.junrdev.booker.domain.model.Vehicle;
 
 import java.util.List;
@@ -17,6 +19,6 @@ public interface VehicleService {
 
     Long deleteVehicles();
 
-    Long deleteVehicles();
+    Booking occupy(BookingDto dto);
 
 }

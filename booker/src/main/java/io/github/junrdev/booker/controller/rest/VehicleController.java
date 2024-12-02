@@ -1,8 +1,10 @@
 package io.github.junrdev.booker.controller.rest;
 
+import io.github.junrdev.booker.domain.dto.BookingDto;
 import io.github.junrdev.booker.domain.dto.VehicleDto;
 import io.github.junrdev.booker.domain.model.Vehicle;
 import io.github.junrdev.booker.domain.service.VehicleService;
+import io.github.junrdev.booker.util.mappers.BookingMapper;
 import io.github.junrdev.booker.util.mappers.VehicleMapper;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -20,11 +22,13 @@ public class VehicleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(VehicleController.class);
     private final VehicleService vehicleService;
     private final VehicleMapper vehicleMapper;
+    private final BookingMapper bookingMapper;
 
     @Autowired
-    public VehicleController(VehicleService vehicleService, VehicleMapper vehicleMapper) {
+    public VehicleController(VehicleService vehicleService, VehicleMapper vehicleMapper, BookingMapper bookingMapper) {
         this.vehicleService = vehicleService;
         this.vehicleMapper = vehicleMapper;
+        this.bookingMapper = bookingMapper;
     }
 
 
@@ -42,8 +46,8 @@ public class VehicleController {
         );
     }
 
-    @GetMapping(value = {"/{identifier}/","/{identifier}"})
-    public ResponseEntity<VehicleDto> addVehicleToRoute(
+    @GetMapping(value = {"/{identifier}/", "/{identifier}"})
+    public ResponseEntity<VehicleDto> getVehicleByIdentifier(
             @PathVariable(name = "identifier") String identifier
     ) {
         return ResponseEntity.ok(vehicleMapper.toDto(vehicleService.getVehicleByIdentifier(identifier)));
@@ -56,11 +60,18 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleMapper.toDto(vehicleService.addVehicle(dto)));
     }
 
-    @PutMapping("/{id}/occupy/")
-    public ResponseEntity<VehicleDto> occupyVehicleSeat(
-            @PathVariable String vehicleId
+    @PutMapping("/{identifier}/occupy/")
+    public ResponseEntity<BookingDto> occupyVehicleSeat(
+            @PathVariable(name = "identifier", required = false) String identifier,
+            @Valid @RequestBody BookingDto bookingDto
     ) {
-        return ResponseEntity.ok(vehicleMapper.toDto(vehicleService.addVehicle(dto)));
+
+        if (identifier != null){
+            Vehicle vehicle = vehicleService.getVehicleByIdentifier(identifier);
+            bookingDto.setVehicleId(vehicle.getId());
+        }
+
+        return ResponseEntity.ok(bookingMapper.toDto(vehicleService.occupy(bookingDto)));
     }
 
     @DeleteMapping("/delete/all")
