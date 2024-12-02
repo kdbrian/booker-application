@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends MongoRepository<Booking, String> {
 
-    List<Booking> findByUserId(String userID);
+    List<Booking> findByUserID(String userID);
 
     List<Booking> findByPaymentStatus(PAYMENT_STATUS paymentStatus);
 

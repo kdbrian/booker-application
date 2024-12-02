@@ -46,7 +46,7 @@ public class BookingServiceImpl implements BookingService {
 //        if (!ObjectId.isValid(userID))
 //            throw new AppError("Invalid user id : "+userID, HttpStatus.BAD_REQUEST);
 
-        return bookingRepository.findByUserId(userID);
+        return bookingRepository.findByUserID(userID);
     }
 
     @Override
