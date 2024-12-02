@@ -24,5 +24,6 @@ public class Booking{
         private PAYMENT_STATUS paymentStatus;
         private BOOKING_STATUS bookingStatus;
         private String createdAt;
+        private String updatedAt;
 }
 

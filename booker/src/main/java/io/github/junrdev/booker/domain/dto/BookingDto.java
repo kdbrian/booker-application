@@ -31,7 +31,8 @@ public class BookingDto {
     @Builder.Default
     private BOOKING_STATUS bookingStatus = BOOKING_STATUS.PENDING;
 
-    String createdAt;
+    private String createdAt;
+    private String updatedAt;
 
 }
 

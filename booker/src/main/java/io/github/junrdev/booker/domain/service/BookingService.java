@@ -12,6 +12,9 @@ public interface BookingService {
     List<Booking> getBookingsByPaymentStatus(PAYMENT_STATUS paymentStatus);
     List<Booking> getBookingsByUserId(String userID);
     List<Booking> getBookingsByVehicles(String vehicleID);
+
+    Booking updateBooking(String bookingID, BookingDto dto);
+
     Booking addBooking(BookingDto dto);
     Booking cancelBooking(String bookingID);
     void deleteBooking(String bookingID);

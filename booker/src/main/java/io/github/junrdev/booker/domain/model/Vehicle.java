@@ -39,6 +39,8 @@ public class Vehicle {
 
     @Builder.Default
     private String createdAt = LocalDateTime.now().toString();
+
+    private String updatedAt;
 }
 
 

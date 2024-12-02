@@ -55,8 +55,32 @@ public class BookingServiceImpl implements BookingService {
             throw new AppError("Invalid vehicle id : " + vehicleID, HttpStatus.BAD_REQUEST);
 
         Vehicle vehicle = vehicleRepository.findById(vehicleID)
-                .orElseThrow(() -> new AppError("Missing vehicle id : " +vehicleID, HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new AppError("Missing vehicle id : " + vehicleID, HttpStatus.BAD_REQUEST));
         return bookingRepository.findByVehicle(vehicle);
+    }
+
+    @Override
+    public Booking updateBooking(String bookingID, BookingDto dto) {
+
+        if (!ObjectId.isValid(bookingID))
+            throw new AppError("Invalid Booking id : " + bookingID, HttpStatus.BAD_REQUEST);
+
+        if (dto.getId() != null && !bookingID.equals(dto.getId()))
+            throw new AppError("Invalid booking id : " + bookingID, HttpStatus.BAD_REQUEST);
+
+        Booking booking = bookingRepository.findById(bookingID)
+                .orElseThrow(() -> new AppError("Missing Booking id : " + bookingID, HttpStatus.BAD_REQUEST));
+
+
+        if (dto.getPaymentStatus() != null)
+            booking.setPaymentStatus(dto.getPaymentStatus());
+
+        if (dto.getBookingStatus() != null)
+            booking.setBookingStatus(dto.getBookingStatus());
+
+        booking.setUpdatedAt(LocalDateTime.now().toString());
+
+        return bookingRepository.save(booking);
     }
 
     @Override
@@ -90,7 +114,18 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingID)
                 .orElseThrow(() -> new AppError("Missing booking id : " + bookingID, HttpStatus.BAD_REQUEST));
 
+        if (booking.getBookingStatus() == BOOKING_STATUS.CANCELLED)
+            throw new AppError("Attempt to cancel already cancelled booking", HttpStatus.BAD_REQUEST);
+
         booking.setBookingStatus(BOOKING_STATUS.CANCELLED);
+
+        Vehicle vehicle = booking.getVehicle();
+
+        if (vehicle.getSeatsOccuppied() > 0)
+            vehicle.setSeatsOccuppied(vehicle.getSeatsOccuppied() - 1);
+
+        vehicle.setUpdatedAt(LocalDateTime.now().toString());
+        vehicleRepository.save(vehicle);
 
         return bookingRepository.save(booking);
     }
