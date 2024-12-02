@@ -1,6 +1,7 @@
 package io.github.junrdev.booker.controller.rest;
 
 import io.github.junrdev.booker.domain.dto.BookingDto;
+import io.github.junrdev.booker.domain.enumarations.BOOKING_STATUS;
 import io.github.junrdev.booker.domain.enumarations.PAYMENT_STATUS;
 import io.github.junrdev.booker.domain.model.Booking;
 import io.github.junrdev.booker.domain.service.BookingService;
@@ -42,35 +43,76 @@ public class BookingController {
             @RequestParam(required = false, value = "status") String status
     ) {
         var statuses = Arrays.stream(PAYMENT_STATUS.values()).map(Enum::toString);
-        LOGGER.debug("stats {}", statuses);
-
+        List<Booking> bookings = bookingService.getBookings();
 
         if (user != null) {
 
-            List<Booking> bookings = new ArrayList<>();
+            //hard search almost zero results
+            if (payment != null && vehicle != null && status != null) {
+                bookings = bookingService.getBookingsByUserPaymentStatusAndBookingStatusAndVehicle(
+                        user,
+                        PAYMENT_STATUS.valueOf(payment),
+                        BOOKING_STATUS.valueOf(status),
+                        vehicle
+                );
+                return ResponseEntity.ok(bookings.stream().map(bookingMapper::toDto).toList());
+            }
+
+            //user + payment status
             if (payment != null) {
                 bookings = switch (payment) {
-                    case "pending", "PENDING" -> bookingService.getBookingsByPaymentStatus(PAYMENT_STATUS.PENDING);
+                    case "pending", "PENDING" ->
+                            bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.PENDING);
                     case "completed", "COMPLETED" ->
-                            bookingService.getBookingsByPaymentStatus(PAYMENT_STATUS.COMPLETED);
-                    case "onsite", "ONSITE" -> bookingService.getBookingsByPaymentStatus(PAYMENT_STATUS.ON_SITE);
+                            bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.COMPLETED);
+                    case "onsite", "ONSITE" ->
+                            bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.ON_SITE);
                     case "processing", "PROCESSING" ->
-                            bookingService.getBookingsByPaymentStatus(PAYMENT_STATUS.PROCESSING);
-                    default -> bookingService.getBookingsByUserId(user);
+                            bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.PROCESSING);
+                    default -> bookings;
                 };
 
                 return ResponseEntity.ok(bookings.stream().map(bookingMapper::toDto).toList());
             }
 
+            //user + status
+            if (status != null) {
+                bookings = bookingService.getBookingsByUserIdAndBookingStatus(user, BOOKING_STATUS.valueOf(status.toUpperCase()));
+                return ResponseEntity.ok(bookings.stream().map(bookingMapper::toDto).toList());
+            }
+
             return ResponseEntity.ok(bookingService.getBookingsByUserId(user).stream().map(bookingMapper::toDto).toList());
-
         }
 
+        //payment status
+        if (payment != null) {
+            bookings = switch (payment) {
+                case "pending", "PENDING" ->
+                        bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.PENDING);
+                case "completed", "COMPLETED" ->
+                        bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.COMPLETED);
+                case "onsite", "ONSITE" ->
+                        bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.ON_SITE);
+                case "processing", "PROCESSING" ->
+                        bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.PROCESSING);
+                default -> bookingService.getBookingsByUserId(user);
+            };
+            return ResponseEntity.ok(bookings.stream().map(bookingMapper::toDto).toList());
+        }
+
+        //status
+        if (status != null) {
+            bookings = bookingService.getBookingsByBookingStatus(BOOKING_STATUS.valueOf(status));
+            return ResponseEntity.ok(bookings.stream().map(bookingMapper::toDto).toList());
+        }
+
+        //vehicle
         if (vehicle != null) {
-            return ResponseEntity.ok(bookingService.getBookingsByVehicles(vehicle).stream().map(bookingMapper::toDto).toList());
+            bookings = bookingService.getBookingsByVehicles(vehicle);
+            return ResponseEntity.ok(bookings.stream().map(bookingMapper::toDto).toList());
         }
 
-        return ResponseEntity.ok(bookingService.getBookings().stream().map(bookingMapper::toDto).toList());
+        return ResponseEntity.ok(bookings.stream().map(bookingMapper::toDto).toList());
     }
 
 
@@ -80,11 +122,11 @@ public class BookingController {
             @RequestParam(value = "cancel", required = false) boolean cancel,
             @RequestBody(required = false) BookingDto bookingDto
     ) {
-        if (cancel){
+        if (cancel) {
             return ResponseEntity.ok(bookingMapper.toDto(bookingService.cancelBooking(id)));
         }
 
-        if (bookingDto==null)
+        if (bookingDto == null)
             throw new AppError("Missing Body for update request", HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.ok(bookingMapper.toDto(bookingService.updateBooking(id, bookingDto)));

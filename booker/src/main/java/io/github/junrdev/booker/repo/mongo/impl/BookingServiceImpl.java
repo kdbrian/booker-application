@@ -40,6 +40,18 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public List<Booking> getBookingsByUserPaymentStatusAndBookingStatusAndVehicle(String user, PAYMENT_STATUS paymentStatus, BOOKING_STATUS bookingStatus, String vehicleID) {
+        if (!ObjectId.isValid(vehicleID))
+            throw new AppError("Invalid Vehicle id : " + vehicleID, HttpStatus.BAD_REQUEST);
+
+
+        Vehicle vehicle = vehicleRepository.findById(vehicleID)
+                .orElseThrow(() -> new AppError("Missing Booking id : " + vehicleID, HttpStatus.BAD_REQUEST));
+
+        return bookingRepository.findByUserIDAndPaymentStatusAndBookingStatusAndVehicle(user, paymentStatus, bookingStatus, vehicle);
+    }
+
+    @Override
     public List<Booking> getBookingsByUserId(String userID) {
 
 //        TODO: add check later after impl of user repo
@@ -47,6 +59,21 @@ public class BookingServiceImpl implements BookingService {
 //            throw new AppError("Invalid user id : "+userID, HttpStatus.BAD_REQUEST);
 
         return bookingRepository.findByUserID(userID);
+    }
+
+    @Override
+    public List<Booking> getBookingsByBookingStatus(BOOKING_STATUS bookingStatus) {
+        return bookingRepository.findByBookingStatus(bookingStatus);
+    }
+
+    @Override
+    public List<Booking> getBookingsByUserIdAndBookingStatus(String userID, BOOKING_STATUS bookingStatus) {
+        return bookingRepository.findByUserIDAndBookingStatus(userID, bookingStatus);
+    }
+
+    @Override
+    public List<Booking> getBookingsByUserIdAndPaymentStatus(String userID, PAYMENT_STATUS paymentStatus) {
+        return bookingRepository.findByUserIDAndPaymentStatus(userID, paymentStatus);
     }
 
     @Override
