@@ -135,4 +135,13 @@ public class VehicleController {
 
     }
 
+    @DeleteMapping("/{id}/delete/")
+    public ResponseEntity<String> deleteVehicle(
+            @PathVariable String vehicleId
+    ) {
+        vehicleService.deleteVehicleById(vehicleId );
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
 }

@@ -28,6 +28,7 @@ public interface VehicleService {
     List<Vehicle> getVehiclesSeatsInRange(int[] range);
 
     Long deleteVehicles();
+    void deleteVehicleById(String vehicleId);
 
     Booking occupy(BookingDto dto);
 

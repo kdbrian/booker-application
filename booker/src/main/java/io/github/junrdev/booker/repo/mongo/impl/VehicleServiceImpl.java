@@ -12,6 +12,7 @@ import io.github.junrdev.booker.repo.mongo.VehicleRepository;
 import io.github.junrdev.booker.util.error.AppError;
 import io.github.junrdev.booker.util.mappers.BookingMapper;
 import io.github.junrdev.booker.util.mappers.VehicleMapper;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +115,23 @@ public class VehicleServiceImpl implements VehicleService {
         long count = vehicleRepository.count();
         vehicleRepository.deleteAll();
         return count;
+    }
+
+    @Override
+    public void deleteVehicleById(String vehicleId) {
+
+        if (!ObjectId.isValid(vehicleId))
+            throw new AppError("Invalid Vehicle id : " + vehicleId , HttpStatus.BAD_REQUEST);
+
+
+
+        Vehicle vehicle =  vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new AppError("Missing vehicle " + vehicleId, HttpStatus.NOT_FOUND));
+
+        //drop bookings
+
+
+        vehicleRepository.delete(vehicle);
     }
 
     @Override
