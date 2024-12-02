@@ -8,6 +8,7 @@ import io.github.junrdev.booker.domain.service.BookingService;
 import io.github.junrdev.booker.repo.mongo.VehicleRepository;
 import io.github.junrdev.booker.util.error.AppError;
 import io.github.junrdev.booker.util.mappers.BookingMapper;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,14 @@ public class BookingController {
         this.bookingService = bookingService;
         this.bookingMapper = bookingMapper;
         this.vehicleRepository = vehicleRepository;
+    }
+
+
+    @PostMapping("/new")
+    public ResponseEntity<Booking> bookVehicle(
+            @Valid @RequestBody BookingDto dto
+    ) {
+        return new ResponseEntity<>(bookingService.addBooking(dto), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -87,15 +96,11 @@ public class BookingController {
         //payment status
         if (payment != null) {
             bookings = switch (payment) {
-                case "pending", "PENDING" ->
-                        bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.PENDING);
-                case "completed", "COMPLETED" ->
-                        bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.COMPLETED);
-                case "onsite", "ONSITE" ->
-                        bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.ON_SITE);
-                case "processing", "PROCESSING" ->
-                        bookingService.getBookingsByUserIdAndPaymentStatus(user, PAYMENT_STATUS.PROCESSING);
-                default -> bookingService.getBookingsByUserId(user);
+                case "pending", "PENDING" -> bookingService.getBookingsByPaymentStatus(PAYMENT_STATUS.PENDING);
+                case "completed", "COMPLETED" -> bookingService.getBookingsByPaymentStatus(PAYMENT_STATUS.COMPLETED);
+                case "onsite", "ONSITE" -> bookingService.getBookingsByPaymentStatus(PAYMENT_STATUS.ON_SITE);
+                case "processing", "PROCESSING" -> bookingService.getBookingsByPaymentStatus(PAYMENT_STATUS.PROCESSING);
+                default -> bookingService.getBookings();
             };
             return ResponseEntity.ok(bookings.stream().map(bookingMapper::toDto).toList());
         }

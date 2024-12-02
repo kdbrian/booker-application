@@ -119,8 +119,8 @@ public class BookingServiceImpl implements BookingService {
         if (!ObjectId.isValid(dto.getVehicleId()))
             throw new AppError("Invalid vehicle id : " + dto.getVehicleId(), HttpStatus.BAD_REQUEST);
 
-        Vehicle vehicle = vehicleRepository.findById(dto.getId())
-                .orElseThrow(() -> new AppError("Invalid vehicle id : " + dto.getVehicleId(), HttpStatus.BAD_REQUEST));
+        Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
+                .orElseThrow(() -> new AppError("Missing vehicle id : " + dto.getVehicleId(), HttpStatus.BAD_REQUEST));
 
         Booking booking = Booking.builder()
                 .createdAt(dto.getCreatedAt() != null ? dto.getCreatedAt() : LocalDateTime.now().toString())

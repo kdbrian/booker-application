@@ -5,6 +5,7 @@ import io.github.junrdev.booker.domain.enumarations.PAYMENT_STATUS;
 import io.github.junrdev.booker.domain.model.Booking;
 import io.github.junrdev.booker.util.mappers.EntityToDtoMapper;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,8 @@ public class BookingDto {
     @Builder.Default
     private String userId = UUID.randomUUID().toString();
 
-//    @NotBlank(message = "Vehicle id is required")
+    @NotBlank(message = "Vehicle id is required")
+    @NotNull(message = "Vehicle id cannot be null.")
     private String vehicleId;
 
     @Builder.Default
