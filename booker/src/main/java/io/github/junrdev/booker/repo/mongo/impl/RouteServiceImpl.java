@@ -67,6 +67,16 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    public Route getRouteById(String routeId) {
+        if (!ObjectId.isValid(routeId))
+            throw new AppError("Invalid schedule id : "+routeId, HttpStatus.BAD_REQUEST);
+
+        return routeRepository.findById(routeId)
+                .orElseThrow(()-> new AppError("Missing route with id : "+routeId, HttpStatus.NOT_FOUND));
+
+    }
+
+    @Override
     public List<Route> getScheduleRoute(String scheduleID) {
 
         if (!ObjectId.isValid(scheduleID))

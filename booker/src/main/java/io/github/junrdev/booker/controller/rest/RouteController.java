@@ -39,8 +39,15 @@ public class RouteController {
             @RequestParam(value = "schedule", required = false) String scheduleID,
             @RequestParam(value = "company", required = false) String companyID,
             @RequestParam(value = "from", required = false) String from,
-            @RequestParam(value = "to", required = false) String to
-    ) throws Exception {
+            @RequestParam(value = "to", required = false) String to,
+            @RequestParam(value = "id", required = false) String id
+    ) {
+
+        if (id != null){
+            LOGGER.debug("to {}",to);
+            return ResponseEntity.ok(List.of(routeService.getRouteById(id)));
+        }
+
 
         if (scheduleID != null){
             return ResponseEntity.ok(routeService.getScheduleRoute(scheduleID));
