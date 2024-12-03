@@ -1,0 +1,24 @@
+type Query{
+
+    getCompanies : [Company]
+    getCompanyById(id : ID!) : Company
+
+    getCompanyByLocation(location : String!) : Company
+    getCompaniesByLocation(location : String!) : [Company]
+
+    getCompanyByName(name : String!) : Company
+    getCompaniesByName(name : String!) : [Company]
+
+}
+
+type Mutation{
+
+    #companies
+    #create
+    addCompany(dto : CompanyDto!) : Company
+    addCompanies(dto : [CompanyDto!]) : [Company]
+
+    #delete
+    deleteAll : Boolean
+    deleteById(id : ID!) : Boolean
+}

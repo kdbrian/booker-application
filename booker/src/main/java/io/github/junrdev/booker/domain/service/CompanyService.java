@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CompanyService {
 
@@ -15,13 +16,14 @@ public interface CompanyService {
     List<Company> getAllCompanies();
 
     Company addCompany(CompanyDTO dto);
+
     List<Company> addCompanies(List<CompanyDTO> companyDTOS);
 
     Company getCompanyByName(String name);
 
     List<Company> getCompanyByNameWildCard(String name);
 
-    List<Company> getCompanyByLocation(String name);
+    Company getCompanyByLocation(String name);
 
     List<Company> getCompanyByLocationNameWildCard(String name);
 

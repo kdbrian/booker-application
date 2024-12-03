@@ -1,0 +1,26 @@
+# definitions for company
+
+
+type Company{
+    id:ID!
+    name : String
+    location : String
+    dateJoined: String
+}
+
+input CompanyDto{
+    name : String
+    location : String
+}
+
+
+fragment CompanyBasicInfo on Company{
+    name
+    location
+}
+
+fragment CompanyViewInfo on Company{
+    name
+    location
+    dateJoined
+}

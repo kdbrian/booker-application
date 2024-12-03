@@ -28,7 +28,6 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyMappers companyMappers;
 
 
-
     @Autowired
     public CompanyServiceImpl(CompanyRepository companyRepository, ScheduleRepository scheduleRepository, ScheduleMapper scheduleMapper, CompanyMappers companyMappers) {
         this.companyRepository = companyRepository;
@@ -97,8 +96,10 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<Company> getCompanyByLocation(String name) {
-        return companyRepository.findByLocation(name);
+    public Company getCompanyByLocation(String name) {
+        return companyRepository
+                .findByLocation(name)
+                .orElseThrow(() -> new AppError("Missing company with name : " + name, HttpStatus.NOT_FOUND));
     }
 
     @Override

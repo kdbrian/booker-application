@@ -55,26 +55,6 @@ public class CompanyController {
     }
 
 
-    @GetMapping(value = {"/"})
-    public ResponseEntity<Page<Company>> getAllCompanies(
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) Integer size
-    ) {
-        /*
-        if (page != null) {
-            if (page < 1)
-                throw new AppError("Invalid page configuration", HttpStatus.BAD_REQUEST);
-
-            //page and size
-            Pageable pageable = PageRequest.of(page, size);
-            return ResponseEntity.ok(companyService.findCompanies(pageable));
-        }
-
-         */
-
-        //only size
-        return ResponseEntity.ok(companyService.findCompanies(Pageable.unpaged()));
-    }
 
     @GetMapping("/{id}/")
     public ResponseEntity<Company> getCompanyById(
@@ -91,8 +71,16 @@ public class CompanyController {
 
     @GetMapping
     public ResponseEntity<List<Company>> getLocationCompanies(
+
+            //name location
             @RequestParam(value = "location", required = false) String location,
-            @RequestParam(value = "name", required = false) String name
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "wildcard", required = false) Boolean wildcard,
+
+            //paging and sorting
+            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) Integer size
+
     ) {
 
         if (location != null && name != null) {
@@ -101,16 +89,22 @@ public class CompanyController {
         }
 
         if (location != null && !location.isBlank()) {
-            LOGGER.debug("loc -> {}", location);
-            return ResponseEntity.ok(companyService.getCompanyByLocationNameWildCard(location));
+            if (wildcard) {
+                LOGGER.debug("loc -> {}", location);
+                return ResponseEntity.ok(companyService.getCompanyByLocationNameWildCard(location));
+            } else
+                return ResponseEntity.ok(List.of(companyService.getCompanyByName(location)));
         }
 
         if (name != null && !name.isBlank()) {
-            LOGGER.debug("name -> {}", name);
-            return ResponseEntity.ok(companyService.getCompanyByNameWildCard(name));
+            if (wildcard) {
+                LOGGER.debug("name -> {}", name);
+                return ResponseEntity.ok(companyService.getCompanyByNameWildCard(name));
+            } else
+                return ResponseEntity.ok(List.of(companyService.getCompanyByName(name)));
         }
 
-        return ResponseEntity.ok(companyService.getCompanyByLocation(location));
+        return ResponseEntity.ok(companyService.getAllCompanies());
     }
 
 
