@@ -1,0 +1,18 @@
+
+#route definitions
+type Route{
+    id :ID!,
+    from :String!
+    to :String!
+    schedule :Schedule!
+    createdAt :String!
+
+}
+
+
+input RouteDto{
+    id: String
+    from :String!
+    to :String!
+    scheduleId :String!
+}
