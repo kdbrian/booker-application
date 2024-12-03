@@ -1,5 +1,6 @@
 type Query{
 
+    #companies
     getCompanies : [Company]
     getCompanyById(id : ID!) : Company
 
@@ -8,6 +9,20 @@ type Query{
 
     getCompanyByName(name : String!) : Company
     getCompaniesByName(name : String!) : [Company]
+
+    #schedules
+    getSchedules : [Schedule!]
+    getScheduleById(id : ID!) : [Schedule!]
+    getCompanySchedules(companyId : ID!):[Schedule!]
+
+    #routes
+    getRoutes : [Route]
+    getRouteById(id : ID!) : [Route!]
+    getRouteByScheduleId(scheduleId : ID!) : [Route!]
+    getRouteByCompanyId(companyId : ID!) : [Route!]
+    getRouteByFrom(from : String!) : [Route]
+    getRouteByTo(to : String!) : [Route]
+    getRouteByFromAndTo(from : String!,to : String!) : [Route]
 
 }
 
@@ -19,6 +34,23 @@ type Mutation{
     addCompanies(dto : [CompanyDto!]) : [Company]
 
     #delete
-    deleteAll : Boolean
+    deleteAllCompanies : Boolean
     deleteById(id : ID!) : Boolean
+
+    #schedules
+    #create
+    addSchedule(dto : ScheduleDto) : Schedule
+    addSchedules(dto : [ScheduleDto!]) : [Schedule]
+
+    #delete
+    deleteAllSchedules : Boolean
+    deleteOneById(id : ID!) : Boolean
+
+    #routes
+    #create
+    addRoute(dto:RouteDto) : Route
+
+    #delete
+    deleteAllRoutes : Boolean
+    deleteRouteById (id:ID!): Boolean
 }
