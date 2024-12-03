@@ -27,7 +27,7 @@ import java.util.Optional;
 @Service
 public class RouteServiceImpl implements RouteService {
 
-    private static final Logger LOGGER= LoggerFactory.getLogger(RouteServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RouteServiceImpl.class);
 
     private final RouteRepository routeRepository;
     private final ScheduleRepository scheduleRepository;
@@ -43,12 +43,9 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public Route addRoute(RouteDto dto) {
-
-        if (!ObjectId.isValid(dto.getScheduleID()))
-            throw new AppError("Invalid schedule id : %s", HttpStatus.BAD_REQUEST);
-
+        checkId(dto.getScheduleID());
         var schedule = scheduleRepository.findById(dto.getScheduleID())
-                .orElseThrow(()-> new AppError("Missing route with id : %s", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppError("Missing route with id : %s", HttpStatus.NOT_FOUND));
 
         Route route = Route.builder()
                 .schedule(schedule)
@@ -68,19 +65,16 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public Route getRouteById(String routeId) {
-        if (!ObjectId.isValid(routeId))
-            throw new AppError("Invalid schedule id : "+routeId, HttpStatus.BAD_REQUEST);
-
+        checkId(routeId);
         return routeRepository.findById(routeId)
-                .orElseThrow(()-> new AppError("Missing route with id : "+routeId, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppError("Missing route with id : " + routeId, HttpStatus.NOT_FOUND));
 
     }
 
     @Override
     public List<Route> getScheduleRoute(String scheduleID) {
 
-        if (!ObjectId.isValid(scheduleID))
-            throw new AppError(System.out.printf("Invalid schedule Id : %s", scheduleID).toString(), HttpStatus.NOT_FOUND);
+        checkId(scheduleID);
 
         Optional<Schedule> _schedule = scheduleRepository.findById(scheduleID);
 
@@ -93,17 +87,12 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public List<Route> getCompanyRoute(String companyID) {
 //        LOGGER.debug("invoked with {}", companyID);
-        if (!ObjectId.isValid(companyID))
-            throw new AppError("Invalid company id : %s", HttpStatus.BAD_REQUEST);
+        checkId(companyID);
 
         Optional<Company> _company = companyRepository.findById(companyID);
 
         if (_company.isEmpty())
             throw new AppError("Company not found.", HttpStatus.NOT_FOUND);
-//        LOGGER.debug("with {} go {}", companyID,_company.get());
-
-        //        List<Route> byScheduleCompany = routeRepository.findByScheduleCompany(_company.get());
-//        LOGGER.debug("schedules {} ", byScheduleCompany);
         return routeRepository.findAll()
                 .stream()
                 .filter(
@@ -113,12 +102,18 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public void deleteRoute(Route route) {
-        try{
+        try {
             routeRepository.delete(route);
         } catch (RuntimeException e) {
             LOGGER.debug(e.getMessage());
-            throw new AppError(e.getMessage(),HttpStatus.NOT_FOUND);
+            throw new AppError(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public void deleteRouteById(String routeId) {
+        checkId(routeId);
+        routeRepository.deleteById(routeId);
     }
 
     @Override
