@@ -6,7 +6,6 @@ type Route{
     to :String!
     schedule :Schedule!
     createdAt :String!
-
 }
 
 

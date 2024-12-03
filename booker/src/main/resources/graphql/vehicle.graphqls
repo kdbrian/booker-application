@@ -1,0 +1,24 @@
+#vehicle definitions
+
+type Vehicle {
+    id : ID!
+    identifier : String
+    route : Route
+    price : Float
+    seatCount : Float
+    seatOccupied : Float
+    leavingTime : Float
+    estimatedTimeOfTravel : Float
+    features : [String]
+}
+
+input VehicleDto {
+    routeId : String!
+    identifier : String!
+    price : Float!
+    seatCount : Float!
+    seatOccupied : Float!
+ 0    leavingTime : Float
+    estimatedTimeOfTravel : Float
+    features : [String]
+}
