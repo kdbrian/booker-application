@@ -2,14 +2,18 @@ package io.github.junrdev.booker.repo.mongo.impl;
 
 import io.github.junrdev.booker.domain.dto.CompanyDTO;
 import io.github.junrdev.booker.domain.model.Company;
-import io.github.junrdev.booker.domain.model.Schedule;
 import io.github.junrdev.booker.domain.service.CompanyService;
 import io.github.junrdev.booker.repo.mongo.CompanyRepository;
 import io.github.junrdev.booker.repo.mongo.ScheduleRepository;
 import io.github.junrdev.booker.util.error.AppError;
+import io.github.junrdev.booker.util.mappers.CompanyMappers;
+import io.github.junrdev.booker.util.mappers.ScheduleMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,18 @@ import java.util.Optional;
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
+    private final CompanyRepository companyRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final CompanyMappers companyMappers;
+
+
+
+    @Autowired
+    public CompanyServiceImpl(CompanyRepository companyRepository, ScheduleRepository scheduleRepository, ScheduleMapper scheduleMapper, CompanyMappers companyMappers) {
+        this.companyRepository = companyRepository;
+        this.scheduleRepository = scheduleRepository;
+        this.companyMappers = companyMappers;
+    }
 
     @Override
     public Company getCompanyById(String companyID) {
@@ -32,14 +48,6 @@ public class CompanyServiceImpl implements CompanyService {
         return _company.get();
     }
 
-    private final CompanyRepository companyRepository;
-    private final ScheduleRepository scheduleRepository;
-
-    @Autowired
-    public CompanyServiceImpl(CompanyRepository companyRepository, ScheduleRepository scheduleRepository) {
-        this.companyRepository = companyRepository;
-        this.scheduleRepository = scheduleRepository;
-    }
 
     @Override
     public List<Company> getAllCompanies() {
@@ -54,6 +62,11 @@ public class CompanyServiceImpl implements CompanyService {
                         .location(dto.getLocation())
                         .build()
         );
+    }
+
+    @Override
+    public List<Company> addCompanies(List<CompanyDTO> companyDTOS) {
+        return companyRepository.saveAll(companyDTOS.stream().map(companyMappers::fromDto).toList());
     }
 
     @Override
@@ -105,6 +118,16 @@ public class CompanyServiceImpl implements CompanyService {
         long count = companyRepository.count();
         companyRepository.deleteAll();
         return count;
+    }
+
+    @Override
+    public Page<Company> findCompanies(Pageable pageable) {
+        return companyRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Company> findCompaniesSortBy(Sort sort) {
+        return companyRepository.findAll(sort);
     }
 
 

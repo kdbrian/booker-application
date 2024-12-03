@@ -2,6 +2,9 @@ package io.github.junrdev.booker.domain.service;
 
 import io.github.junrdev.booker.domain.dto.CompanyDTO;
 import io.github.junrdev.booker.domain.model.Company;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -12,6 +15,7 @@ public interface CompanyService {
     List<Company> getAllCompanies();
 
     Company addCompany(CompanyDTO dto);
+    List<Company> addCompanies(List<CompanyDTO> companyDTOS);
 
     Company getCompanyByName(String name);
 
@@ -21,10 +25,16 @@ public interface CompanyService {
 
     List<Company> getCompanyByLocationNameWildCard(String name);
 
-    List<Company> getCompanyByNameAndLocation(String name,String location);
+    List<Company> getCompanyByNameAndLocation(String name, String location);
 
     void deleteById(String companyID);
 
     Long deleteAll();
+
+
+    //pagination
+    Page<Company> findCompanies(Pageable pageable);
+
+    List<Company> findCompaniesSortBy(Sort sort);
 
 }

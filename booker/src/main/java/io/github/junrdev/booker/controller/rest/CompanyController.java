@@ -5,17 +5,17 @@ import io.github.junrdev.booker.domain.model.Company;
 import io.github.junrdev.booker.domain.service.CompanyService;
 import io.github.junrdev.booker.util.error.AppError;
 import jakarta.validation.*;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,7 +37,6 @@ public class CompanyController {
     @PostMapping("/new")
     public ResponseEntity<Company> addCompany(@Valid @RequestBody CompanyDTO dto) {
 
-
         Set<ConstraintViolation<CompanyDTO>> violations = validator.validate(dto);
         if (!violations.isEmpty()) {
             String validatorError = violations.stream().map(v -> "\n" + v.getMessage()).collect(Collectors.joining());
@@ -49,13 +48,36 @@ public class CompanyController {
     }
 
 
-    @GetMapping("/")
-    public ResponseEntity<List<Company>> getAllCompanies() {
-        return ResponseEntity.ok(companyService.getAllCompanies());
+    @PostMapping("/add/all")
+    public ResponseEntity<List<Company>> addCompany(@Valid @RequestBody List<CompanyDTO> companyDTOS) {
+        List<Company> added = companyService.addCompanies(companyDTOS);
+        return new ResponseEntity<>(added, HttpStatus.CREATED);
+    }
+
+
+    @GetMapping(value = {"/"})
+    public ResponseEntity<Page<Company>> getAllCompanies(
+            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) Integer size
+    ) {
+        /*
+        if (page != null) {
+            if (page < 1)
+                throw new AppError("Invalid page configuration", HttpStatus.BAD_REQUEST);
+
+            //page and size
+            Pageable pageable = PageRequest.of(page, size);
+            return ResponseEntity.ok(companyService.findCompanies(pageable));
+        }
+
+         */
+
+        //only size
+        return ResponseEntity.ok(companyService.findCompanies(Pageable.unpaged()));
     }
 
     @GetMapping("/{id}/")
-    public ResponseEntity<Company> getAllCompanies(
+    public ResponseEntity<Company> getCompanyById(
             @PathVariable(value = "id") String companyID
     ) {
         return ResponseEntity.ok(companyService.getCompanyById(companyID));
