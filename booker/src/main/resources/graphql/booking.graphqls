@@ -1,0 +1,19 @@
+#definitions for booking
+
+type Booking {
+    id : ID!
+    userID: String,
+    paymentStatus : PAYMENT_STATUS
+    bookingStatus : BOOKING_STATUS
+    createdAt: String
+    updatedAt: String
+}
+
+
+input BookingDto {
+    id : ID
+    userId : String
+    vehicleId : String!
+    paymentStatus : PAYMENT_STATUS
+    bookingStatus : BOOKING_STATUS
+}

@@ -1,0 +1,16 @@
+# payment status
+enum PAYMENT_STATUS {
+    COMPLETED
+    PENDING
+    PROCESSING
+    ON_SITE
+}
+
+
+
+#booking status
+enum BOOKING_STATUS {
+    CANCELLED
+    COMPLETED
+    PENDING
+}
