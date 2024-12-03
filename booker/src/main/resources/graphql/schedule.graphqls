@@ -1,0 +1,14 @@
+#schedule definitions
+type Schedule{
+    id : ID
+    company : Company!
+    startTime : Float
+    endTime : Float
+}
+
+input ScheduleDto{
+    id : String
+    companyID : String!
+    startTime : String
+    endTime : String
+}
