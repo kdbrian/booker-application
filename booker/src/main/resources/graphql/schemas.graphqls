@@ -46,6 +46,10 @@ type Query{
     getBookingsByVehicles(vehicleID : ID!) : [Booking]
 
 
+    #6. User
+    getUsers: [User]
+    getUserWithId(userId : ID!): User
+    getUserWithEmail(email : String!): User
 
 }
 
@@ -98,5 +102,15 @@ type Mutation{
     cancelBooking(bookingId : ID!):  Booking
     deleteBooking(id : ID!):  Boolean
     deleteBookings :  Boolean
+
+    #users
+    addUser(dto : UserDto) : User
+    addUsers(dto : [UserDto!]) : [User]
+    updateUser(dto : UserDto) : User
+    deleteUser(userId : String) : Boolean
+    deleteUsers : String
+    deactivateUser(userId : String) : Boolean
+
+
 
 }

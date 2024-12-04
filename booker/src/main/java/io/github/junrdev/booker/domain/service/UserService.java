@@ -19,7 +19,7 @@ public interface UserService {
 
     AppUser updateUser(UserDto dto);
 
-    AppUser getUserWithId(String uid);
+    AppUser getUserWithId(String userId);
 
     AppUser getUserWithEmail(String email);
 
@@ -28,7 +28,7 @@ public interface UserService {
 
     Long deleteUsers();
 
-    AppUser deactivateUser(String uid);
+    AppUser deactivateUser(String userId);
 
 
     default void checkId(String id) {

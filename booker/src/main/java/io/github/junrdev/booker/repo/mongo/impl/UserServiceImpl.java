@@ -68,10 +68,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AppUser getUserWithId(String uid) {
-        checkId(uid);
-        return userRepository.findById(uid)
-                .orElseThrow(() -> new AppError("Missing user with id " + uid, HttpStatus.NOT_FOUND));
+    public AppUser getUserWithId(String userId) {
+        checkId(userId);
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new AppError("Missing user with id " + userId, HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -98,12 +98,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AppUser deactivateUser(String uid) {
-        checkId(uid);
+    public AppUser deactivateUser(String userId) {
+        checkId(userId);
 
         //get user
-        AppUser appUser = userRepository.findById(uid)
-                .orElseThrow(() -> new AppError("Missing user with id " + uid, HttpStatus.NOT_FOUND));
+        AppUser appUser = userRepository.findById(userId)
+                .orElseThrow(() -> new AppError("Missing user with id " + userId, HttpStatus.NOT_FOUND));
 
         appUser.setActive(false);
 
