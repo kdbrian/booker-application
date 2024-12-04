@@ -26,6 +26,12 @@ public class UserDto {
 
     private String phone;
 
+    @NotNull(message = "password cannot be null")
+    @NotBlank(message = "password cannot be blank")
+    @Max(message = "password can only be 8-12 characters long", value = 20)
+    @Min(message = "password can only be 8-12 characters long", value = 8)
+    private String password;
+
     @Builder.Default
     private String dateJoined = LocalDateTime.now().toString();
 

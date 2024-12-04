@@ -9,11 +9,23 @@ public class UserMappers extends EntityToDtoMapper<AppUser, UserDto> {
 
     @Override
     public AppUser fromDto(UserDto userDto) {
-        return null;
+        return AppUser.builder()
+                .name(userDto.getName())
+                .email(userDto.getEmail())
+                .password(userDto.getPassword())
+                .phone(userDto.getPhone())
+                .build();
     }
 
     @Override
     public UserDto toDto(AppUser appUser) {
-        return null;
+        return UserDto.builder()
+                .uid(appUser.getUid())
+                .name(appUser.getName())
+                .email(appUser.getEmail())
+                .phone(appUser.getPhone())
+                //TODO: remove this for prod
+                .password(appUser.getPassword())
+                .build();
     }
 }
