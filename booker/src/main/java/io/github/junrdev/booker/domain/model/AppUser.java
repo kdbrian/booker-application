@@ -31,4 +31,7 @@ public class AppUser {
     @Builder.Default
     private boolean isActive = true;
 
+    @Builder.Default
+    private String lastUpdated = LocalDateTime.now().toString();
+
 }
