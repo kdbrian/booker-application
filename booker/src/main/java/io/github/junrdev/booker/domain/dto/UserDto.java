@@ -1,9 +1,6 @@
 package io.github.junrdev.booker.domain.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -24,7 +21,7 @@ public class UserDto {
     private String name;
 
     @NotBlank(message = "username cannot be blank")
-
+    @Email(message = "email is of invalid format")
     private String email;
 
     private String phone;
