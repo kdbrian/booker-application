@@ -1,8 +1,21 @@
-
+#user definitions
 type User{
-    id : ID!
+    uid : ID!
     name : String
     email : String
     phone : String
     password : String
+    dateJoined : String
+    lastUpdated : String
+    isActive : Boolean
+}
+
+
+input UserDto{
+    uid : ID!
+    name : String
+    email : String
+    phone : String
+    password : String
+    isActive : Boolean
 }
