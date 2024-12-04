@@ -7,6 +7,7 @@ import io.github.junrdev.booker.domain.service.ScheduleService;
 import io.github.junrdev.booker.repo.mongo.CompanyRepository;
 import io.github.junrdev.booker.repo.mongo.ScheduleRepository;
 import io.github.junrdev.booker.util.error.AppError;
+import io.github.junrdev.booker.util.mappers.ScheduleMapper;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -28,11 +29,13 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final CompanyRepository companyRepository;
+    private final ScheduleMapper scheduleMapper;
 
     @Autowired
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, CompanyRepository companyRepository) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, CompanyRepository companyRepository, ScheduleMapper scheduleMapper) {
         this.scheduleRepository = scheduleRepository;
         this.companyRepository = companyRepository;
+        this.scheduleMapper = scheduleMapper;
     }
 
 
@@ -83,10 +86,17 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    public List<Schedule> addSchedules(List<ScheduleDto> scheduleDtos) {
+        return scheduleRepository.saveAll(
+                scheduleDtos.stream().map(scheduleMapper::fromDto).toList()
+        );
+    }
+
+    @Override
     public void deleteSchedule(Schedule schedule) {
         Optional<Company> _company = companyRepository.findById(schedule.getCompany().getId());
         if (_company.isEmpty())
-            throw new AppError("Company missing with id "+ schedule.getCompany(), HttpStatus.NOT_FOUND);
+            throw new AppError("Company missing with id " + schedule.getCompany(), HttpStatus.NOT_FOUND);
         scheduleRepository.delete(schedule);
     }
 
