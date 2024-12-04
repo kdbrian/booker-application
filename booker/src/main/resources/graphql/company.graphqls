@@ -14,13 +14,13 @@ input CompanyDto{
 }
 
 
-fragment CompanyBasicInfo on Company{
-    name
-    location
-}
-
-fragment CompanyViewInfo on Company{
-    name
-    location
-    dateJoined
-}
+#fragment CompanyBasicInfo on Company{
+#    name
+#    location
+#}
+#
+#fragment CompanyViewInfo on Company{
+#    name
+#    location
+#    dateJoined
+#}

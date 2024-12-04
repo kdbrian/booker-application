@@ -24,7 +24,6 @@ import java.util.*;
 @Service
 public class VehicleServiceImpl implements VehicleService {
 
-
     private final static Logger LOGGER = LoggerFactory.getLogger(VehicleServiceImpl.class);
     private final VehicleRepository vehicleRepository;
     private final RouteRepository routeRepository;
@@ -76,19 +75,15 @@ public class VehicleServiceImpl implements VehicleService {
                 .findById(dto.routeId())
                 .orElseThrow(() -> new AppError(String.format("Missing route with Id : %s", dto.routeId()), HttpStatus.NOT_FOUND));
 
-        LOGGER.debug("Price {}", dto.price());
         Vehicle vehicle = vehicleMapper.fromDto(dto);
         vehicle.setRoute(route);
 
-        LOGGER.debug("Price {}", dto.price());
         return vehicleRepository.save(vehicle);
     }
 
     @Override
     public List<Vehicle> addVehicles(List<VehicleDto> dto) {
-        return vehicleRepository.saveAll(
-                dto.stream().map()
-        );
+        return dto.stream().map(this::addVehicle).toList();
     }
 
     @Override

@@ -2,7 +2,7 @@ type Query{
 
     #1. companies
     getCompanies : [Company]
-    getCompanyById(id : ID!) : Company
+    getCompanyById(companyID : ID!) : Company
 
     getCompanyByLocation(location : String!) : Company
     getCompaniesByLocation(location : String!) : [Company]
@@ -37,13 +37,13 @@ type Query{
 
     #5. Booking
     getBookings : [Booking]
-    getBookingWithId(id : ID!) : Booking
-    getBookingsByPaymentStatus(status : PAYMENT_STATUS) : [Booking]
+    getBookingWithId(bookingId : ID!) : Booking
+    getBookingsByPaymentStatus(paymentStatus : PAYMENT_STATUS) : [Booking]
     getBookingsByUserId(userId : ID!) : [Booking]
-    getBookingsByBookingStatus(status : BOOKING_STATUS!) : [Booking]
-    getBookingsByUserIdAndBookingStatus(userId : ID!, status : BOOKING_STATUS!) : [Booking]
-    getBookingsByUserIdAndPaymentStatus(userId : ID!, status : PAYMENT_STATUS!) : [Booking]
-    getBookingsByVehicles(vehicleId : ID!) : [Booking]
+    getBookingsByBookingStatus(bookingStatus : BOOKING_STATUS!) : [Booking]
+    getBookingsByUserIdAndBookingStatus(userID : ID!, bookingStatus : BOOKING_STATUS!) : [Booking]
+    getBookingsByUserIdAndPaymentStatus(userID : ID!, paymentStatus : PAYMENT_STATUS!) : [Booking]
+    getBookingsByVehicles(vehicleID : ID!) : [Booking]
 
 
 
@@ -53,17 +53,17 @@ type Mutation{
 
     #1. companies
     #create
-    addCompany(dto : CompanyDto!) : Company
-    addCompanies(dto : [CompanyDto!]) : [Company]
+    addCompany(companyDTO : CompanyDto!) : Company
+    addCompanies(companyDTO : [CompanyDto!]) : [Company]
 
     #delete
     deleteAllCompanies : Boolean
-    deleteById(id : ID!) : Boolean
+    deleteById(companyId : ID!) : Boolean
 
     #2. schedules
     #create
     addSchedule(dto : ScheduleDto) : Schedule
-    addSchedules(dto : [ScheduleDto!]) : [Schedule]
+    addSchedules(scheduleDtos : [ScheduleDto!]) : [Schedule]
 
     #delete
     deleteAllSchedules : Boolean
@@ -80,8 +80,8 @@ type Mutation{
 
     #4. vehicles
     #create
-    addVehicle (vehicle:VehicleDto): Vehicle
-    addVehicles (vehicle:[VehicleDto!]): [Vehicle!]
+    addVehicle (vehicleDto:VehicleDto): Vehicle
+    addVehicles (vehicleDtos:[VehicleDto!]): [Vehicle!]
 
     #change
     bookVehicle(bookingDto : BookingDto): Booking
@@ -91,13 +91,12 @@ type Mutation{
     deleteVehicles : Boolean
 
     #5: Booking
-    addBooking(dto : [BookingDto!]) : Booking
+    addBooking(bookingDto : [BookingDto!]) : Booking
     addBookings(dto : [BookingDto!]) : [Booking]
 
-    updateBooking(id : ID!, dto : BookingDto!):  Booking
-    cancelBooking(id : ID!):  Booking
+    updateBooking(id : ID!, bookingDto : BookingDto!):  Booking
+    cancelBooking(bookingId : ID!):  Booking
     deleteBooking(id : ID!):  Boolean
     deleteBookings :  Boolean
-
 
 }
