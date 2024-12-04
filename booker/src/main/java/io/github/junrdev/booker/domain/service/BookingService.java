@@ -14,6 +14,7 @@ import java.util.List;
 public interface BookingService {
 
     List<Booking> getBookings();
+
     Booking getBookingWithId(String bookingId);
 
     List<Booking> getBookingsByPaymentStatus(PAYMENT_STATUS paymentStatus);
@@ -34,6 +35,8 @@ public interface BookingService {
 
     Booking addBooking(BookingDto dto);
 
+    List<Booking> addBookings(List<BookingDto> dto);
+
     Booking cancelBooking(String bookingID);
 
     void deleteBooking(String bookingID);
@@ -45,7 +48,6 @@ public interface BookingService {
     }
 
     Long deleteBookings();
-
 
 
 }

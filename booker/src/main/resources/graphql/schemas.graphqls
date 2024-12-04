@@ -35,6 +35,18 @@ type Query{
     getVehicleByRouteTo(to : String!) : [Vehicle]
     getVehicleByRouteFromAndTo(from : String!, to : String!) : [Vehicle]
 
+    #5. Booking
+    getBookings : [Booking]
+    getBookingWithId(id : ID!) : Booking
+    getBookingsByPaymentStatus(status : PAYMENT_STATUS) : [Booking]
+    getBookingsByUserId(userId : ID!) : [Booking]
+    getBookingsByBookingStatus(status : BOOKING_STATUS!) : [Booking]
+    getBookingsByUserIdAndBookingStatus(userId : ID!, status : BOOKING_STATUS!) : [Booking]
+    getBookingsByUserIdAndPaymentStatus(userId : ID!, status : PAYMENT_STATUS!) : [Booking]
+    getBookingsByVehicles(vehicleId : ID!) : [Booking]
+
+
+
 }
 
 type Mutation{
@@ -77,5 +89,15 @@ type Mutation{
     #delete
     deleteVehicle (vehicleID:ID!) : Boolean
     deleteVehicles : Boolean
+
+    #5: Booking
+    addBooking(dto : [BookingDto!]) : Booking
+    addBookings(dto : [BookingDto!]) : [Booking]
+
+    updateBooking(id : ID!, dto : BookingDto!):  Booking
+    cancelBooking(id : ID!):  Booking
+    deleteBooking(id : ID!):  Boolean
+    deleteBookings :  Boolean
+
 
 }

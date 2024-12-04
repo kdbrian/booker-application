@@ -1,8 +1,11 @@
 package io.github.junrdev.booker.controller.graphql;
 
+import io.github.junrdev.booker.domain.dto.BookingDto;
+import io.github.junrdev.booker.domain.dto.RouteDto;
 import io.github.junrdev.booker.domain.model.Route;
 import io.github.junrdev.booker.domain.service.RouteService;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
@@ -53,5 +56,28 @@ public class RouteGraphController {
         return routeService.findByFromContainingAndToContaining(from, to);
     }
 
+
+    @MutationMapping
+    public Route addRoute(@Argument RouteDto dto) {
+        return routeService.addRoute(dto);
+    }
+
+    @MutationMapping
+    public List<Route> addRoutes(@Argument List<RouteDto> dto) {
+        return routeService.addRoutes(dto);
+    }
+
+
+    @MutationMapping
+    public Boolean deleteAllRoutes() {
+        routeService.deleteRoutes();
+        return true;
+    }
+
+    @MutationMapping
+    public Boolean deleteRouteById(String id) {
+        routeService.deleteRouteById(id);
+        return true;
+    }
 
 }

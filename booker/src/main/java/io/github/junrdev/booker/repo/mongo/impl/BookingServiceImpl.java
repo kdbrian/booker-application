@@ -126,6 +126,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public List<Booking> addBookings(List<BookingDto> dto) {
+        return bookingRepository.saveAll(
+                dto.stream().map(bookingMapper::fromDto).toList()
+        );
+    }
+
+    @Override
     public Booking cancelBooking(String bookingID) {
         checkId(bookingID);
         Booking booking = bookingRepository.findById(bookingID)
