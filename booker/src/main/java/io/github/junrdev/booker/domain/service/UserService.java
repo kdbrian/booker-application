@@ -15,6 +15,8 @@ public interface UserService {
 
     List<AppUser> addUsers(List<UserDto> dto);
 
+    List<AppUser> getUsers();
+
     AppUser updateUser(UserDto dto);
 
     AppUser getUserWithId(String uid);
@@ -22,9 +24,9 @@ public interface UserService {
     AppUser getUserWithEmail(String email);
 
 
-    void deleteUser(AppUser user);
+    void deleteUser(String userId);
 
-    void deleteUsers();
+    Long deleteUsers();
 
     AppUser deactivateUser(String uid);
 

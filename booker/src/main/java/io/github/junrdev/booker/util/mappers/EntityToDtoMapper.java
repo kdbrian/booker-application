@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 * Type parameter {# K the mapped entity }
 * */
 public abstract class EntityToDtoMapper<T, K>{
-
     public abstract T fromDto(K k);
     public abstract K toDto(T t);
 }

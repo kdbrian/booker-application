@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
 
@@ -34,6 +33,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<AppUser> addUsers(List<UserDto> dto) {
         return userRepository.saveAll(dto.stream().map(userMappers::fromDto).toList());
+    }
+
+    @Override
+    public List<AppUser> getUsers() {
+        return userRepository.findAll();
     }
 
     @Override
@@ -68,13 +72,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(AppUser user) {
-        userRepository.delete(user);
+    public void deleteUser(String userID) {
+        checkId(userID);
+
+        //get user
+        AppUser appUser = userRepository.findById(userID)
+                .orElseThrow(() -> new AppError("Missing user with id " + userID, HttpStatus.NOT_FOUND));
+
+        userRepository.delete(appUser);
     }
 
     @Override
-    public void deleteUsers() {
+    public Long deleteUsers() {
+        var count = userRepository.count();
         userRepository.deleteAll();
+        return count;
     }
 
     @Override
