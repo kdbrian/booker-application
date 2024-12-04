@@ -51,8 +51,8 @@ type Query{
 
 type Mutation{
 
-    #1. companies
-    #create
+    #Companies
+    #create a company passing the relevant data
     addCompany(companyDTO : CompanyDto!) : Company
     addCompanies(companyDTO : [CompanyDto!]) : [Company]
 

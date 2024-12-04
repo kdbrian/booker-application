@@ -11,21 +11,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 public class SecurityConfig {
 
     //provide filter chain bean
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.authorizeHttpRequests(req ->
-                req.requestMatchers("/bookerapp")
-                        .permitAll()
-                        .requestMatchers("/app")
-                        .authenticated()
-        ).httpBasic(Customizer.withDefaults());
+        return httpSecurity
+                .csrf().disable()
+                .authorizeHttpRequests(req ->
+                        req.anyRequest().permitAll()
+                ).httpBasic(Customizer.withDefaults())
+                .build();
 
-        return httpSecurity.build();
     }
 
 
