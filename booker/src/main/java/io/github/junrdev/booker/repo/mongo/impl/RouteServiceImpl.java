@@ -9,6 +9,7 @@ import io.github.junrdev.booker.repo.mongo.CompanyRepository;
 import io.github.junrdev.booker.repo.mongo.RouteRepository;
 import io.github.junrdev.booker.repo.mongo.ScheduleRepository;
 import io.github.junrdev.booker.util.error.AppError;
+import io.github.junrdev.booker.util.mappers.RouteMappers;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,13 +33,15 @@ public class RouteServiceImpl implements RouteService {
     private final RouteRepository routeRepository;
     private final ScheduleRepository scheduleRepository;
     private final CompanyRepository companyRepository;
+    private final RouteMappers routeMappers;
 
 
     @Autowired
-    public RouteServiceImpl(RouteRepository routeRepository, ScheduleRepository scheduleRepository, CompanyRepository companyRepository) {
+    public RouteServiceImpl(RouteRepository routeRepository, ScheduleRepository scheduleRepository, CompanyRepository companyRepository, RouteMappers routeMappers) {
         this.routeRepository = routeRepository;
         this.scheduleRepository = scheduleRepository;
         this.companyRepository = companyRepository;
+        this.routeMappers = routeMappers;
     }
 
     @Override
@@ -56,6 +59,11 @@ public class RouteServiceImpl implements RouteService {
         return routeRepository.save(
                 route
         );
+    }
+
+    @Override
+    public List<Route> addRoutes(List<RouteDto> dto) {
+        return routeRepository.saveAll(dto.stream().map(routeMappers::fromDto).toList());
     }
 
     @Override

@@ -28,7 +28,7 @@ public class RouteDto {
 
     private String createdAt;
 
-    private Set<Vehicle> vehicles;
+//    private Set<Vehicle> vehicles;
 
 
 }

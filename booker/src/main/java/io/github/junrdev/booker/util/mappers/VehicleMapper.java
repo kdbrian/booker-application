@@ -2,7 +2,9 @@ package io.github.junrdev.booker.util.mappers;
 
 import io.github.junrdev.booker.domain.dto.VehicleDto;
 import io.github.junrdev.booker.domain.model.Vehicle;
+import org.springframework.stereotype.Component;
 
+@Component
 public class VehicleMapper extends EntityToDtoMapper<Vehicle, VehicleDto> {
     @Override
     public Vehicle fromDto(VehicleDto vehicleDto) {

@@ -12,12 +12,12 @@ type Query{
 
     #2. schedules
     getSchedules : [Schedule!]
-    getScheduleById(id : ID!) : [Schedule!]
+    getScheduleById(id : ID!) : Schedule!
     getCompanySchedules(companyId : ID!):[Schedule!]
 
     #3. routes
     getRoutes : [Route]
-    getRouteById(id : ID!) : [Route!]
+    getRouteById(id : ID!) : Route!
     getRouteByScheduleId(scheduleId : ID!) : [Route!]
     getRouteByCompanyId(companyId : ID!) : [Route!]
     getRouteByFrom(from : String!) : [Route]
@@ -25,14 +25,15 @@ type Query{
     getRouteByFromAndTo(from : String!,to : String!) : [Route]
 
     #4. vehicles
-    getVehicle : [Vehicle]
+    getVehicles : [Vehicle]
     getVehicleByPrice(price : Float!) : [Vehicle]
     getVehicleBySeatCount(seatCount : Int!) : [Vehicle]
-    getVehicleBySeatRange(seatCount : [Int!]) : [Vehicle]
-    getVehicleByIdentifier(identifier : String!) : [Vehicle]
+    getVehicleBySeatRange(seatRange : [Int!]) : [Vehicle]
+    getVehicleByIdentifier(identifier : String!) : Vehicle
     getVehicleByRoute(routeID : ID!) : [Vehicle]
     getVehicleByRouteFrom(from : String!) : [Vehicle]
-    getVehicleByRouteTO(to : String!) : [Vehicle]
+    getVehicleByRouteTo(to : String!) : [Vehicle]
+    getVehicleByRouteFromAndTo(from : String!, to : String!) : [Vehicle]
 
 }
 
@@ -54,11 +55,12 @@ type Mutation{
 
     #delete
     deleteAllSchedules : Boolean
-    deleteOneById(id : ID!) : Boolean
+    deleteScheduleById(id : ID!) : Boolean
 
     #3. routes
     #create
     addRoute(dto:RouteDto) : Route
+    addRoutes(dto:[RouteDto!]) : [Route!]
 
     #delete
     deleteAllRoutes : Boolean
@@ -73,7 +75,7 @@ type Mutation{
     bookVehicle(bookingDto : BookingDto): Booking
 
     #delete
-    deleteVehicles : Boolean
     deleteVehicle (vehicleID:ID!) : Boolean
+    deleteVehicles : Boolean
 
 }

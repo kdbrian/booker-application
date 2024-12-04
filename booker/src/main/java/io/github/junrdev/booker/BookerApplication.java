@@ -22,22 +22,6 @@ public class BookerApplication {
 
 
 	@Bean
-	public ScheduleMapper scheduleMapper(){
-		return new ScheduleMapper();
-	}
-
-	@Bean
-	public VehicleMapper vehicleMapper(){
-		return new VehicleMapper();
-	}
-
-//	@Bean
-//	public VehicleMapper vehicleMapper(){
-//		return new VehicleMapper();
-//	}
-
-
-	@Bean
 	public Validator validator(){
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         return factory.getValidator();
