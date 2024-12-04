@@ -9,13 +9,14 @@ import java.util.List;
 
 public interface VehicleService {
 
-    List<Vehicle> getRouteVehiclesByRouteId(String routeID);
-    List<Vehicle> getRouteVehiclesByRouteFrom(String from);
+    List<Vehicle> getVehiclesByRouteId(String routeID);
+    List<Vehicle> getVehiclesByRouteFrom(String from);
 
     List<Vehicle> getRouteVehiclesByRouteTo(String to);
     List<Vehicle> getRouteVehiclesByRouteFromAndTo(String from, String to);
 
     Vehicle addVehicle(VehicleDto dto);
+    List<Vehicle> addVehicles(List<VehicleDto> dto);
 
     Vehicle getVehicleByIdentifier(String identifier);
 

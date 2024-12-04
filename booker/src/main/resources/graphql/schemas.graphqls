@@ -1,6 +1,6 @@
 type Query{
 
-    #companies
+    #1. companies
     getCompanies : [Company]
     getCompanyById(id : ID!) : Company
 
@@ -10,12 +10,12 @@ type Query{
     getCompanyByName(name : String!) : Company
     getCompaniesByName(name : String!) : [Company]
 
-    #schedules
+    #2. schedules
     getSchedules : [Schedule!]
     getScheduleById(id : ID!) : [Schedule!]
     getCompanySchedules(companyId : ID!):[Schedule!]
 
-    #routes
+    #3. routes
     getRoutes : [Route]
     getRouteById(id : ID!) : [Route!]
     getRouteByScheduleId(scheduleId : ID!) : [Route!]
@@ -24,11 +24,21 @@ type Query{
     getRouteByTo(to : String!) : [Route]
     getRouteByFromAndTo(from : String!,to : String!) : [Route]
 
+    #4. vehicles
+    getVehicle : [Vehicle]
+    getVehicleByPrice(price : Float!) : [Vehicle]
+    getVehicleBySeatCount(seatCount : Int!) : [Vehicle]
+    getVehicleBySeatRange(seatCount : [Int!]) : [Vehicle]
+    getVehicleByIdentifier(identifier : String!) : [Vehicle]
+    getVehicleByRoute(routeID : ID!) : [Vehicle]
+    getVehicleByRouteFrom(from : String!) : [Vehicle]
+    getVehicleByRouteTO(to : String!) : [Vehicle]
+
 }
 
 type Mutation{
 
-    #companies
+    #1. companies
     #create
     addCompany(dto : CompanyDto!) : Company
     addCompanies(dto : [CompanyDto!]) : [Company]
@@ -37,7 +47,7 @@ type Mutation{
     deleteAllCompanies : Boolean
     deleteById(id : ID!) : Boolean
 
-    #schedules
+    #2. schedules
     #create
     addSchedule(dto : ScheduleDto) : Schedule
     addSchedules(dto : [ScheduleDto!]) : [Schedule]
@@ -46,11 +56,24 @@ type Mutation{
     deleteAllSchedules : Boolean
     deleteOneById(id : ID!) : Boolean
 
-    #routes
+    #3. routes
     #create
     addRoute(dto:RouteDto) : Route
 
     #delete
     deleteAllRoutes : Boolean
     deleteRouteById (id:ID!): Boolean
+
+    #4. vehicles
+    #create
+    addVehicle (vehicle:VehicleDto): Vehicle
+    addVehicles (vehicle:[VehicleDto!]): [Vehicle!]
+
+    #change
+    bookVehicle(bookingDto : BookingDto): Booking
+
+    #delete
+    deleteVehicles : Boolean
+    deleteVehicle (vehicleID:ID!) : Boolean
+
 }

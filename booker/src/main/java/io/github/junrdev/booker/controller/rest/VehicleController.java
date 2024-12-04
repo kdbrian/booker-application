@@ -49,7 +49,7 @@ public class VehicleController {
         List<Vehicle> vehicles = vehicleService.getVehicles();
 
         if (routeId != null)
-            vehicles = vehicleService.getRouteVehiclesByRouteId(routeId);
+            vehicles = vehicleService.getVehiclesByRouteId(routeId);
 
         if (seatcount != null) {
             vehicles = vehicleService.getVehiclesBySeatCount(seatcount);
@@ -93,7 +93,7 @@ public class VehicleController {
         }
 
         if (routeFrom != null) {
-            vehicles = vehicleService.getRouteVehiclesByRouteFrom(routeFrom);
+            vehicles = vehicleService.getVehiclesByRouteFrom(routeFrom);
             return ResponseEntity.ok(vehicles.stream().map(vehicleMapper::toDto).toList());
         }
 

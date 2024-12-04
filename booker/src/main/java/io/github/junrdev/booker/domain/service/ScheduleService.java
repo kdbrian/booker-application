@@ -15,6 +15,7 @@ public interface ScheduleService {
     List<Schedule> getCompanySchedules(String companyId);
 
     Schedule addSchedule(ScheduleDto dto);
+    List<Schedule> addSchedules(List<ScheduleDto> scheduleDtos);
 
     void deleteSchedule(Schedule schedule);
 
