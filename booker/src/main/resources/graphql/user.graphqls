@@ -12,7 +12,7 @@ type User{
 
 
 input UserDto{
-    uid : ID!
+    uid : ID
     name : String
     email : String
     phone : String
