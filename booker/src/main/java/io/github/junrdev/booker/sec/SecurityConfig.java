@@ -14,16 +14,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.security.crypto.password.NoOpPasswordEncoder.*;
+
 @RestController
 public class SecurityConfig {
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder(){
-//        return new BCryptPasswordEncoder();
-//    }
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        //using no opp
+        return getInstance();
+    }
+
+
 
     @Bean
     public UserDetailsService userDetailsService(){
+        //automatically configures password encoder when using defaults
         InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
         UserDetails userDetails = User.withUsername("admin")
                 .password("2022")
