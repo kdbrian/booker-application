@@ -21,7 +21,7 @@ public interface UserService {
 
     AppUser getUserWithId(String userId);
 
-    AppUser getUserWithEmail(String email);
+    AppUser getUserWithEmail(String email) throws AppError;
 
 
     void deleteUser(String userId);

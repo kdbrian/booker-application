@@ -1,5 +1,6 @@
 package io.github.junrdev.booker.domain.model;
 
 public enum Role {
-    User, ADMIN
+    User//READ&WRITE -> context -> /app
+    , ADMIN //READ&WRITE    all
 }
