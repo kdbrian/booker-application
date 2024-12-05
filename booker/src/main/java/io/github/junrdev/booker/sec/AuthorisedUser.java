@@ -38,7 +38,7 @@ public class AuthorisedUser implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return appUser.isActive();
     }
 
     @Override
@@ -53,6 +53,6 @@ public class AuthorisedUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return appUser.isActive();
     }
 }
