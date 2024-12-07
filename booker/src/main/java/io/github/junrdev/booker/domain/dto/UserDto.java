@@ -13,19 +13,19 @@ public class UserDto {
 
     private String uid;
 
-
-    @NotNull(message = "username cannot be null")
     @NotBlank(message = "username cannot be blank")
-    @Max(message = "username can only be 4-20 characters long", value = 20)
-    @Min(message = "username can only be 4-20 characters long", value = 4)
+    @Size(min = 4, max = 20, message = "username must be between 4 and 20 characters")
     private String name;
 
-    @NotBlank(message = "username cannot be blank")
+    @NotBlank(message = "email cannot be blank")
     @Email(message = "email is of invalid format")
     private String email;
 
-    @Max(message = "Invalid phone number.", value = 12)
-    @Min(message = "Invalid phone number.", value = 10)
+    @NotBlank(message = "phone number cannot be blank")
+    @Pattern(
+            regexp = "^(254|\\+254|0)?(7\\d{8}|1\\d{8})$",
+            message = "phone number must be a valid Kenyan number starting with 07, 01, or 254"
+    )
     private String phone;
 
     @Builder.Default
