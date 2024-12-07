@@ -28,6 +28,10 @@ public class UserDto {
     )
     private String phone;
 
+    @NotBlank(message = "username cannot be blank")
+    @Size(min = 6, max = 20, message = "username must be between 4 and 20 characters")
+    private String password;
+
     @Builder.Default
     private String dateJoined = LocalDateTime.now().toString();
 

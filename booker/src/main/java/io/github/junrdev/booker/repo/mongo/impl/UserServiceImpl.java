@@ -8,6 +8,7 @@ import io.github.junrdev.booker.util.error.AppError;
 import io.github.junrdev.booker.util.mappers.UserMappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,18 +21,20 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMappers userMappers;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMappers userMappers) {
+    public UserServiceImpl(UserRepository userRepository, UserMappers userMappers, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMappers = userMappers;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public AppUser addUser(UserDto dto) {
         //encoding plain password
-//        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         return userRepository.save(userMappers.fromDto(dto));
     }
 

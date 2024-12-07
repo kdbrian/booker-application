@@ -5,13 +5,18 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-@Document
 @Data
+@Document
 @Builder
-public class AppUser {
+public class AppUser implements UserDetails {
 
     @Id
     private String uid;
@@ -23,6 +28,11 @@ public class AppUser {
 
     private String phone;
 
+    private String password;
+
+    @Builder.Default
+    private Role role = Role.CLIENT;
+
 
     @Builder.Default
     private String dateJoined = LocalDateTime.now().toString();
@@ -33,4 +43,18 @@ public class AppUser {
     @Builder.Default
     private String lastUpdated = LocalDateTime.now().toString();
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(() -> role.name());
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 }
