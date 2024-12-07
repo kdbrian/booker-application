@@ -1,6 +1,6 @@
 package io.github.junrdev.booker.controller.rest.auth;
 
-import io.github.junrdev.booker.config.JwtService;
+import io.github.junrdev.booker.domain.service.JwtService;
 import io.github.junrdev.booker.domain.dto.UserDto;
 import io.github.junrdev.booker.domain.model.AppUser;
 import io.github.junrdev.booker.domain.model.auth.AuthRequest;
@@ -8,6 +8,8 @@ import io.github.junrdev.booker.domain.model.auth.AuthResponse;
 import io.github.junrdev.booker.domain.service.AuthService;
 import io.github.junrdev.booker.repo.mongo.UserRepository;
 import io.github.junrdev.booker.util.mappers.UserMappers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +22,7 @@ import java.util.HashMap;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
@@ -46,14 +49,22 @@ public class AuthServiceImpl implements AuthService {
                         request.getPassword()
                 )
         );
+
         //already authenticated or not
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
+
+        log.info("user {} {}", user, user.getUid());
 
         return AuthResponse.<UserDto>builder()
                 .data(userMappers.toDto(user))
                 .token(jwtService.generateToken(new HashMap<>(), user))
                 .build();
+    }
+
+    @Override
+    public AuthResponse<UserDto> getUserAccount() {
+        return null;
     }
 
     @Override
@@ -69,6 +80,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         var saved = userRepository.save(user);
+
         return AuthResponse.<String>builder()
                 .token(null)
                 .data("Saved user with id : " + saved.getUid())

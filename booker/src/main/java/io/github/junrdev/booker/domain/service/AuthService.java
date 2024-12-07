@@ -7,6 +7,7 @@ import io.github.junrdev.booker.domain.model.auth.AuthResponse;
 public interface AuthService {// extends UserService{
 
     AuthResponse<UserDto> loginUser(AuthRequest request);
+    AuthResponse<UserDto> getUserAccount();
 
     AuthResponse<String> registerUser(UserDto userDto);
 
