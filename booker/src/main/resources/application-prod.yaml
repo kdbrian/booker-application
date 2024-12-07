@@ -3,11 +3,18 @@ server:
     context-path: /bookerapp
 
 spring:
+  #  mongodb config
   data:
     uri:
     database: bookerapp
 
+  # graphql config
   graphql:
     graphiql:
       enabled: true
       path: /graphapp
+
+  #  security config
+  security:
+    secret:
+      key: b2eeb4f16c8e4a9f9f3c1a45b5b37410f89d85cfcf9a1f489dab26d1d5a7c693
