@@ -13,6 +13,7 @@ public class UserMappers extends EntityToDtoMapper<AppUser, UserDto> {
                 .name(userDto.getName())
                 .email(userDto.getEmail())
                 .phone(userDto.getPhone())
+                .password(userDto.getPassword())
                 .build();
     }
 
@@ -22,6 +23,7 @@ public class UserMappers extends EntityToDtoMapper<AppUser, UserDto> {
                 .uid(appUser.getUid())
                 .name(appUser.getName())
                 .email(appUser.getEmail())
+//                .password(appUser.getEmail())
                 .phone(appUser.getPhone())
                 .build();
     }
