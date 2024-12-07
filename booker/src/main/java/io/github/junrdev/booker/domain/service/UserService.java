@@ -23,7 +23,6 @@ public interface UserService {
 
     AppUser getUserWithEmail(String email);
 
-
     void deleteUser(String userId);
 
     Long deleteUsers();

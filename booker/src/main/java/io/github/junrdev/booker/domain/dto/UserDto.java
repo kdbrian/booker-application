@@ -16,8 +16,8 @@ public class UserDto {
 
     @NotNull(message = "username cannot be null")
     @NotBlank(message = "username cannot be blank")
-    @Max(message = "username can only be 8-20 characters long", value = 20)
-    @Min(message = "username can only be 8-20 characters long", value = 8)
+    @Max(message = "username can only be 4-20 characters long", value = 20)
+    @Min(message = "username can only be 4-20 characters long", value = 4)
     private String name;
 
     @NotBlank(message = "username cannot be blank")
@@ -28,8 +28,8 @@ public class UserDto {
 
     @NotNull(message = "password cannot be null")
     @NotBlank(message = "password cannot be blank")
-    @Max(message = "password can only be 8-12 characters long", value = 20)
-    @Min(message = "password can only be 8-12 characters long", value = 8)
+    @Max(message = "password can only be 6-12 characters long", value = 20)
+    @Min(message = "password can only be 6-12 characters long", value = 6)
     private String password;
 
     @Builder.Default
