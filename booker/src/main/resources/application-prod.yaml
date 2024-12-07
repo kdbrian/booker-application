@@ -1,0 +1,13 @@
+server:
+  servlet:
+    context-path: /bookerapp
+
+spring:
+  data:
+    uri:
+    database: bookerapp
+
+  graphql:
+    graphiql:
+      enabled: true
+      path: /graphapp
