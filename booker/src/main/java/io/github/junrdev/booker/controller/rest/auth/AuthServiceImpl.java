@@ -7,11 +7,15 @@ import io.github.junrdev.booker.domain.model.auth.AuthRequest;
 import io.github.junrdev.booker.domain.model.auth.AuthResponse;
 import io.github.junrdev.booker.domain.service.AuthService;
 import io.github.junrdev.booker.repo.mongo.UserRepository;
+import io.github.junrdev.booker.util.mappers.UserMappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -19,22 +23,37 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final UserMappers userMappers;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, UserMappers userMappers) {
         this.userRepository = userRepository;//user db functions
         this.jwtService = jwtService;//for generating tokens
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.userMappers = userMappers;
     }
 
     @Override
     public AuthResponse<UserDto> loginUser(AuthRequest request) {
-        //fetch user info
 
-        //validate
+        //fetch user info -> validate -> return response
+        //^^ done by authentication manager
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+        //already authenticated or not
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow();
 
-        //return response
-        return null;
+        return AuthResponse.<UserDto>builder()
+                .data(userMappers.toDto(user))
+                .token(jwtService.generateToken(new HashMap<>(), user))
+                .build();
     }
 
     @Override
