@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 
-@RequestMapping("/route")
+@RequestMapping("/api/route")
 @RestController
 public class RouteController {
 

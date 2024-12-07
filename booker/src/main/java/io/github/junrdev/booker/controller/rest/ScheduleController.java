@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-@RequestMapping("/schedule")
+@RequestMapping("/api/schedule")
 @RestController
 public class ScheduleController {
 

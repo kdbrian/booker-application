@@ -26,7 +26,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/login", "/register").permitAll()
+                        req.requestMatchers("/login", "/register", "/api").permitAll()
                                 .anyRequest().authenticated()
                 )
                 //setting the auth provider(bean in app config)
