@@ -1,13 +1,13 @@
 package io.github.junrdev.booker.config;
 
+import io.github.junrdev.booker.domain.service.JwtService;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +20,9 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService {
 
     private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
+
+    @Value("${spring.security.secret.key}")
+    private String SECRET_KEY = "";
 
     @Override
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
@@ -52,8 +55,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public SecretKey getSigningKey() {
-        String secretKey = getSecretKey();
-        log.info("secretkey {}", secretKey);
+        String secretKey = SECRET_KEY;
         byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }

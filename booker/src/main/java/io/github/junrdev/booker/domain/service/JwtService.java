@@ -1,4 +1,4 @@
-package io.github.junrdev.booker.config;
+package io.github.junrdev.booker.domain.service;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +10,6 @@ import java.util.function.Function;
 
 public interface JwtService {
 
-    @Value("${spring.security.secret.key}")
-    String SECRET_KEY = "";
 
     String generateToken(
             Map<String, Object> extraClaims,
@@ -30,8 +28,4 @@ public interface JwtService {
 
     boolean isTokenExpired(String token);
 
-
-    default String getSecretKey() {
-        return SECRET_KEY;
-    }
 }

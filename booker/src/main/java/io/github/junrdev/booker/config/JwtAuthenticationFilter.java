@@ -1,5 +1,6 @@
 package io.github.junrdev.booker.config;
 
+import io.github.junrdev.booker.domain.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import jakarta.servlet.FilterChain;
