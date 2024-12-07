@@ -23,7 +23,6 @@ public class AppUser {
 
     private String phone;
 
-//    private String password;
 
     @Builder.Default
     private String dateJoined = LocalDateTime.now().toString();

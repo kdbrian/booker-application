@@ -24,13 +24,9 @@ public class UserDto {
     @Email(message = "email is of invalid format")
     private String email;
 
+    @Max(message = "Invalid phone number.", value = 12)
+    @Min(message = "Invalid phone number.", value = 10)
     private String phone;
-
-    @NotNull(message = "password cannot be null")
-    @NotBlank(message = "password cannot be blank")
-    @Max(message = "password can only be 6-12 characters long", value = 20)
-    @Min(message = "password can only be 6-12 characters long", value = 6)
-    private String password;
 
     @Builder.Default
     private String dateJoined = LocalDateTime.now().toString();
