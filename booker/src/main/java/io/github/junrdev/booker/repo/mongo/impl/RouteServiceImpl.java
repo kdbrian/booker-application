@@ -46,7 +46,7 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public Route addRoute(RouteDto dto) {
-        checkId(dto.getScheduleID());
+        //checkId(dto.getScheduleID());
         var schedule = scheduleRepository.findById(dto.getScheduleID())
                 .orElseThrow(() -> new AppError("Missing route with id : %s", HttpStatus.NOT_FOUND));
 
